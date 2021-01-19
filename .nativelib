@@ -1,0 +1,20 @@
+{
+    "id": "5c64fc66-e517-4087-ae60-3512cbdfa5c6",
+    "platforms": [
+        "all"
+    ],
+    "packages": {
+        "firebase-core": {
+            "version": "0.1.0",
+            "platforms": [],
+            "dependencies": []
+        },
+        "firebase-crashlytics": {
+            "version": "0.1.0",
+            "platforms": [],
+            "dependencies": [
+                "firebase-core@0.1.0"
+            ]
+        }
+    }
+}

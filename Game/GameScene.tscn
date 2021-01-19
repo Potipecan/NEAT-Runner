@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Game/GameScene.cs" type="Script" id=1]
+[ext_resource path="res://Game/Start.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assests/Textures/DeathLaserBeam.tres" type="Texture" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 10, 540 )
+
+[node name="GameScene" type="Node2D"]
+pause_mode = 2
+script = ExtResource( 1 )
+LaserSpeed = 20.0
+
+[node name="PlayArea" type="Node2D" parent="."]
+pause_mode = 1
+
+[node name="Start" parent="PlayArea" instance=ExtResource( 2 )]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="DeathLaser" type="Sprite" parent="."]
+pause_mode = 1
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Beam" type="Area2D" parent="DeathLaser"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathLaser/Beam"]
+position = Vector2( 0, 540 )
+shape = SubResource( 1 )
+
+[node name="Texture" type="Sprite" parent="DeathLaser/Beam/CollisionShape2D"]
+texture = ExtResource( 4 )
+
+[node name="HUD" type="Control" parent="."]
+pause_mode = 2
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

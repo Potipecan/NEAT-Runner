@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assests/Fonts/MenuButtonFont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Assests/Fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Game/MainMenu.cs" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+font_data = ExtResource( 2 )
+
+[node name="MainMenu" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.407843, 0.407843, 0.407843, 1 )
+script = ExtResource( 3 )
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.283
+anchor_right = 0.717
+anchor_bottom = 0.192
+margin_left = -0.360046
+margin_right = 0.359985
+margin_bottom = -0.360001
+custom_fonts/font = SubResource( 1 )
+text = "A NEAT ARENA"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="PlayBtn" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -169.0
+margin_top = -39.1818
+margin_right = 169.0
+margin_bottom = 35.8182
+custom_fonts/font = ExtResource( 1 )
+text = "Play"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="PlayBtn" to="." method="OnPlayBtnPressed"]
