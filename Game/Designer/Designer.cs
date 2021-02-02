@@ -52,7 +52,7 @@ namespace A_NEAT_arena.Game
                 return;
             }
 
-            var seg = LevelBuilder.Segment.Instance() as Segment;
+            var seg = Preloads.Segment.Instance() as Segment;
             seg.Build(FileName, plan);
 
             var pack = new PackedScene();
@@ -62,18 +62,19 @@ namespace A_NEAT_arena.Game
         }
     }
 
-    public static class LevelBuilder
+    public static class Preloads
     {
         public static TileSet EnvTileSet, DangerTileSet;
-        public static PackedScene Coin, Flag, Segment;
+        public static PackedScene Coin, Flag, Segment, PlayerRunner;
 
-        static LevelBuilder()
+        static Preloads()
         {
             EnvTileSet = GD.Load<TileSet>("res://Game/Designer/TileSets/Env.tres");
             DangerTileSet = GD.Load<TileSet>("res://Game/Designer/TileSets/Danger.tres");
             Coin = GD.Load<PackedScene>("res://Game/Designer/Pickups/Coin.tscn");
             Flag = GD.Load<PackedScene>("res://Game/Designer/Pickups/Flag.tscn");
             Segment = GD.Load<PackedScene>("res://Game/Designer/Segment.tscn");
+            PlayerRunner = GD.Load<PackedScene>("res://Game/Runner/PlayerRunner.tscn");
         }
 
     }

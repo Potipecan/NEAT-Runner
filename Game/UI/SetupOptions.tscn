@@ -1,0 +1,187 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Game/UI/SetupOptions.cs" type="Script" id=1]
+[ext_resource path="res://icons/RotateLeft.svg" type="Texture" id=2]
+
+[node name="SetupOptions" type="ColorRect"]
+margin_right = 335.0
+margin_bottom = 859.0
+color = Color( 0.439216, 0.439216, 0.439216, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartButton" type="Button" parent="."]
+anchor_left = 0.077936
+anchor_top = 0.925708
+anchor_right = 0.533936
+anchor_bottom = 0.990822
+margin_left = -0.0950012
+margin_top = 0.0279989
+margin_right = 0.144989
+margin_bottom = 0.0950012
+disabled = true
+text = "Begin"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="LoadButton" type="Button" parent="."]
+anchor_left = 0.016
+anchor_top = 0.443
+anchor_right = 0.419
+anchor_bottom = 0.473
+margin_left = 0.14
+margin_top = -0.0370178
+margin_right = 0.134995
+margin_bottom = 0.192993
+text = "Load"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeleteButton" type="Button" parent="."]
+anchor_left = 0.554806
+anchor_top = 0.443
+anchor_right = 0.957806
+anchor_bottom = 0.473
+margin_left = 0.14
+margin_top = -0.0370178
+margin_right = 0.134995
+margin_bottom = 0.192993
+text = "Delete"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="SegmentLoader" type="FileDialog" parent="."]
+margin_left = -1.33484
+margin_top = 25.362
+margin_right = 663.665
+margin_bottom = 486.362
+window_title = "Open File(s)"
+mode = 1
+current_dir = "res://Saves"
+current_path = "res://Saves/"
+
+[node name="LoadedSegments" type="ItemList" parent="."]
+anchor_right = 1.0
+anchor_bottom = 0.437
+margin_bottom = -0.382996
+select_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SeedInput" type="SpinBox" parent="."]
+margin_left = 117.665
+margin_top = 470.379
+margin_right = 300.665
+margin_bottom = 494.379
+min_value = 1.0
+max_value = 1e+14
+value = 1.0
+allow_greater = true
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="SeedInput"]
+anchor_left = -0.326
+anchor_right = -0.077
+anchor_bottom = 1.0
+margin_left = -1.342
+margin_right = 1.05951
+text = "Seed:"
+align = 2
+valign = 1
+
+[node name="RandomizeButton" type="Button" parent="SeedInput"]
+anchor_left = 1.0
+anchor_right = 1.153
+anchor_bottom = 1.0
+margin_left = 1.52588e-05
+margin_right = 0.00102234
+icon = ExtResource( 2 )
+
+[node name="LaserSpeedInput" type="SpinBox" parent="."]
+margin_left = 140.5
+margin_top = 527.0
+margin_right = 323.5
+margin_bottom = 551.0
+max_value = 500.0
+value = 150.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="LaserSpeedInput"]
+anchor_left = -0.326
+anchor_right = -0.077
+anchor_bottom = 1.0
+margin_left = -1.342
+margin_right = 1.05951
+grow_horizontal = 0
+text = "Laser speed:"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LaserAccInput" type="SpinBox" parent="."]
+margin_left = 140.5
+margin_top = 554.0
+margin_right = 323.5
+margin_bottom = 578.0
+max_value = 500.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="LaserAccInput"]
+anchor_left = -0.326
+anchor_right = -0.077
+anchor_bottom = 1.0
+margin_left = -73.1768
+margin_right = 1.25616
+grow_horizontal = 0
+text = "Laser acceleration:"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RandomSeedCheck" type="CheckButton" parent="."]
+margin_left = 103.665
+margin_top = 422.362
+margin_right = 179.665
+margin_bottom = 462.362
+
+[node name="Label" type="Label" parent="RandomSeedCheck"]
+margin_left = -92.0
+margin_right = -1.0
+margin_bottom = 40.0
+text = "Random seed:"
+align = 2
+valign = 1
+
+[node name="Label" type="Label" parent="."]
+margin_left = 16.0
+margin_top = 527.0
+margin_right = 56.0
+margin_bottom = 554.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="StartButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="LoadButton" to="." method="OnLoadButtonPressed"]
+[connection signal="pressed" from="DeleteButton" to="." method="OnDeleteButtonPressed"]
+[connection signal="files_selected" from="SegmentLoader" to="." method="OnFilesLoaded"]
+[connection signal="pressed" from="SeedInput/RandomizeButton" to="." method="OnRandomizeButtonPressed"]
+[connection signal="toggled" from="RandomSeedCheck" to="." method="OnRandomSeedCheckToggled"]

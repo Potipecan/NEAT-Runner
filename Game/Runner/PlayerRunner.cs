@@ -1,35 +1,40 @@
 using Godot;
+using A_NEAT_arena.Game;
 
-public class PlayerRunner : BaseRunner
+namespace A_NEAT_arena.Game
 {
-    public PlayerRunner() : base() { }
-
-    public override void Die()
+    public class PlayerRunner : BaseRunner
     {
-        GD.Print("I is ded");
-    }
+        public PlayerRunner() : base() { }
 
-    protected override void HandleInput()
-    {
-        Jump = Input.IsActionPressed("ui_up");
-        if (Input.IsActionPressed("ui_right")) Move = 1f;
-        else if (Input.IsActionPressed("ui_left")) Move = -1f;
-        else Move = 0f;
-    }
-
-    public override void PickupCoin(Coin coin)
-    {
-        if (!PickedUpCoins.Contains(coin))
+        public override void Die(Node2D cause)
         {
-            Score += 100;
-            PickedUpCoins.Add(coin);
-            coin.QueueFree();
-            GD.Print("Bling!");
         }
-    }
 
-    public override void TouchFlag(Flag flag)
-    {
-        GD.Print("Checkpoint?");
-    }
+        protected override void HandleInput()
+        {
+            Jump = Input.IsActionPressed("ui_up");
+            if (Input.IsActionPressed("ui_right")) Move = 1f;
+            else if (Input.IsActionPressed("ui_left")) Move = -1f;
+            else Move = 0f;
+        }
+
+        public override void PickupCoin(Coin coin)
+        {
+            if (!PickedUpCoins.Contains(coin))
+            {
+                Score += 100;
+                PickedUpCoins.Add(coin);
+                coin.QueueFree();
+            }
+        }
+
+        public override void TouchFlag(Flag flag)
+        {
+            if (!TouchedFlags.Contains(flag))
+            {
+                Score += 1000;
+            }
+        }
+    } 
 }

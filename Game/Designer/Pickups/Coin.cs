@@ -1,15 +1,24 @@
 using Godot;
 using System;
 
-public class Coin : Area2D
+namespace A_NEAT_arena.Game
 {
-    public void OnBodyEntered(Node body)
+    public class Coin : Area2D
     {
-        GD.Print($"Bling {Name}");
-        if (body.GetType().IsSubclassOf(typeof(BaseRunner)))
+        public override void _Ready()
         {
-            GD.Print("Bling!");
-            ((BaseRunner)body).PickupCoin(this);
+            base._Ready();
+            Connect("body_entered", this, nameof(OnBodyEntered));
         }
-    }
+
+        public void OnBodyEntered(Node body)
+        {
+            //GD.Print($"Bling {Name}");
+            if (body.GetType().IsSubclassOf(typeof(BaseRunner)))
+            {
+                //GD.Print("Bling!");
+                ((BaseRunner)body).PickupCoin(this);
+            }
+        }
+    } 
 }

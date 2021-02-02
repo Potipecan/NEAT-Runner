@@ -1,10 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Game/GameScene.cs" type="Script" id=1]
-[ext_resource path="res://Game/Start.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Game/PlayArea.cs" type="Script" id=2]
+[ext_resource path="res://Game/UI/SetupOptions.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assests/Textures/DeathLaserBeam.tres" type="Texture" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 60, 540 )
+
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 10, 540 )
 
 [node name="GameScene" type="Node2D"]
@@ -14,31 +18,53 @@ LaserSpeed = 20.0
 
 [node name="PlayArea" type="Node2D" parent="."]
 pause_mode = 1
-
-[node name="Start" parent="PlayArea" instance=ExtResource( 2 )]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
-
-[node name="DeathLaser" type="Sprite" parent="."]
-pause_mode = 1
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Beam" type="Area2D" parent="DeathLaser"]
+[node name="DeathLaser" type="Sprite" parent="PlayArea"]
+position = Vector2( 50, 0 )
+__meta__ = {
+"_edit_group_": true
+}
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathLaser/Beam"]
-position = Vector2( 0, 540 )
+[node name="Beam" type="Area2D" parent="PlayArea/DeathLaser"]
+collision_mask = 3
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayArea/DeathLaser/Beam"]
+position = Vector2( -50, 540 )
 shape = SubResource( 1 )
 
-[node name="Texture" type="Sprite" parent="DeathLaser/Beam/CollisionShape2D"]
+[node name="Texture" type="Sprite" parent="PlayArea/DeathLaser/Beam"]
+position = Vector2( 0, 540 )
 texture = ExtResource( 4 )
+
+[node name="RunnerDetector" type="Area2D" parent="PlayArea"]
+position = Vector2( 1920, 0 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayArea/RunnerDetector"]
+position = Vector2( 0, 540 )
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
 
 [node name="HUD" type="Control" parent="."]
 pause_mode = 2
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 1920.0
+margin_bottom = 1080.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="SetupOptions" parent="HUD" instance=ExtResource( 3 )]
+margin_left = 89.3838
+margin_top = 76.1634
+margin_right = 424.384
+margin_bottom = 935.163
+[connection signal="body_exited" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="OnBeamBodyExited"]
+[connection signal="body_exited" from="PlayArea/RunnerDetector" to="PlayArea" method="OnRunnerDetectorBodyEntered"]

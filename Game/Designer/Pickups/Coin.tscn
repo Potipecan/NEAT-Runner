@@ -3,7 +3,6 @@
 [ext_resource path="res://Assests/Textures/Coin.png" type="Texture" id=1]
 [ext_resource path="res://Game/Designer/Pickups/Coin.cs" type="Script" id=2]
 
-
 [sub_resource type="CircleShape2D" id=1]
 radius = 22.2881
 
@@ -21,4 +20,3 @@ shape = SubResource( 1 )
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 30, 30 )
 texture = ExtResource( 1 )
-[connection signal="body_entered" from="." to="." method="OnBodyEntered"]

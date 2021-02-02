@@ -7,15 +7,24 @@ namespace A_NEAT_arena.Game
     [Tool]
     public class Segment : Node2D
     {
-        public Rect2 UsedRect;
-        public Dictionary<int, Array<Vector2>> Plan;
+        [Export] public Rect2 UsedRect;
+        [Export] public Dictionary<int, Array<Vector2>> Plan;
         public Flag Flag;
+        [Export] string FlagName;
+
+        public bool IsObsolete { get; set; }
 
         private TileMap Env, Danger;
 
         public Segment() : base()
         {
-            
+            IsObsolete = false;
+        }
+
+        public override void _Ready()
+        {
+            base._Ready();
+            Flag = GetNode<Flag>(FlagName);
         }
 
         public void Build(string lvlName, Dictionary<int, Array<Vector2>> plan)
@@ -23,29 +32,29 @@ namespace A_NEAT_arena.Game
             Name = lvlName;
             Plan = plan;
 
-            GD.Print("Check 1");
+            //GD.Print("Check 1");
             UsedRect = new Rect2();
             Env = new TileMap()
             {
                 Name = "Env",
                 CellSize = new Vector2(60, 60),
-                TileSet = LevelBuilder.EnvTileSet,
+                TileSet = Preloads.EnvTileSet,
                 CollisionLayer = 2,
             };
 
-            GD.Print("Check 2");
+            //GD.Print("Check 2");
             Danger = new TileMap()
             {
                 Name = "Danger",
                 CellSize = new Vector2(60, 60),
-                TileSet = LevelBuilder.DangerTileSet,
+                TileSet = Preloads.DangerTileSet,
                 CollisionLayer = 5,
             };
-            GD.Print("Check 3");
+            //GD.Print("Check 3");
             Env.AddToGroup("Environment", true);
             Danger.AddToGroup("Danger", true);
 
-            GD.Print("Check 4");
+            //GD.Print("Check 4");
             AddChild(Env);
             Env.Owner = this;
             AddChild(Danger);
@@ -58,7 +67,7 @@ namespace A_NEAT_arena.Game
 
                     case 0:
                     case 1:
-                        GD.Print("Check 5 1");
+                        //GD.Print("Check 5 1");
                         foreach (Vector2 tile in plan[i])
                         {
                             Env.SetCell((int)tile.x, (int)tile.y, i);
@@ -68,7 +77,7 @@ namespace A_NEAT_arena.Game
 
                         break;
                     case 2:
-                        GD.Print("Check 5 2");
+                        //GD.Print("Check 5 2");
                         try
                         {
                             foreach (Vector2 tile in plan[2])
@@ -85,16 +94,16 @@ namespace A_NEAT_arena.Game
                         break;
 
                     case 3:
-                        GD.Print("Check 5 3");
+                        //GD.Print("Check 5 3");
                         try
                         {
                             foreach (Vector2 tile in plan[3])
                             {
-                                Node2D coin = (Node2D)LevelBuilder.Coin.Instance();
+                                Node2D coin = (Node2D)Preloads.Coin.Instance();
 
                                 coin.Name = $"Coin_{tile.x}_{tile.y}";
                                 coin.Position = tile * 60f;
-                                GD.Print($"{coin.Name} {coin.Position}");
+                                //GD.Print($"{coin.Name} {coin.Position}");
 
                                 AddChild(coin);
                                 coin.Owner = this;
@@ -110,12 +119,12 @@ namespace A_NEAT_arena.Game
                         break;
 
                     case 4:
-                        GD.Print("Check 5 4");
+                        //GD.Print("Check 5 4");
                         try
                         {
                             Vector2 tile = plan[4][0];
 
-                            Node2D flag = (Node2D)LevelBuilder.Flag.Instance();
+                            Node2D flag = (Node2D)Preloads.Flag.Instance();
 
                             flag.Name = $"Flag_{tile.x}_{tile.y}";
                             flag.Position = tile * 60f;
@@ -123,7 +132,7 @@ namespace A_NEAT_arena.Game
 
                             AddChild(flag);
                             flag.Owner = this;
-                            Flag = flag as Flag;
+                            FlagName = flag.Name; 
                             UsedRect = UsedRect.Expand(tile);
                         }
                         catch (Exception ex)
@@ -134,8 +143,13 @@ namespace A_NEAT_arena.Game
                 }
             }
 
-            GD.Print("Check 6");
+            //GD.Print("Check 6");
             Env.UpdateBitmaskRegion();
+        }
+
+        public void OnViewportExited(Viewport vp)
+        {
+            if (IsObsolete) QueueFree();
         }
     }
 }

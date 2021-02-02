@@ -1,21 +1,36 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
-public class Flag : Area2D
+namespace A_NEAT_arena.Game
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+    public class Flag : Area2D
     {
-        
+        private List<BaseRunner> TouchedRunners;
+
+        public Flag() : base()
+        {
+            TouchedRunners = new List<BaseRunner>();
+        }
+
+        // Called when the node enters the scene tree for the first time.
+        public override void _Ready()
+        {
+            Connect("body_entered", this, nameof(OnBodyEntered));
+        }
+
+        public void OnBodyEntered(Node body)
+        {
+            if (body.GetType().IsSubclassOf(typeof(BaseRunner)))
+            {
+                if (!TouchedRunners.Contains(body as BaseRunner))
+                {
+                    (body as BaseRunner).TouchFlag(this);
+                    TouchedRunners.Add(body as BaseRunner);
+                }
+            }
+        }
     }
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
 }
