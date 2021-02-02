@@ -33,6 +33,8 @@ namespace A_NEAT_arena.Game
             SetupOptions.SegmentsLoadedEvent += OnSegmentsLoaded;
 
             PlayArea.CourseSegments = SetupOptions.LoadedSegments;
+            PlayArea.GameOverEvent += OnGameOver;
+
             Camera.MakeCurrent();
         }
 
@@ -63,6 +65,11 @@ namespace A_NEAT_arena.Game
         private void OnSegmentsLoaded()
         {
             
+        }
+
+        private void OnGameOver()
+        {
+
         }
 
         #region Utilities

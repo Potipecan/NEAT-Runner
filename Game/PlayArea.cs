@@ -7,8 +7,8 @@ namespace A_NEAT_arena.Game
 {
     public class PlayArea : Node2D
     {
-        [Signal] public delegate void AllRunnersDead();
-        public event AllRunnersDead AllRunnersDeadEvent;
+        [Signal] public delegate void GameOver();
+        public event GameOver GameOverEvent;
 
         public List<BaseRunner> Runners { get; set; }
         public List<PackedScene> CourseSegments { get; set; }        
@@ -157,7 +157,19 @@ namespace A_NEAT_arena.Game
 
         private void OnRunnerDied(BaseRunner runner)
         {
+            if(runner.GetType() != typeof(PlayerRunner))
+            {
+                
+            }
 
+            runner.QueueFree();
+
+            if (Runners.Count < 1)
+            {
+                Reset();
+                GetTree().Paused = true;
+                GameOverEvent?.Invoke();
+            }
         }
     }
 }
