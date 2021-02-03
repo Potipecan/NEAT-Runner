@@ -182,9 +182,24 @@ namespace A_NEAT_arena.Game
             DiedEvent?.Invoke(this);
         }
 
-        public abstract void PickupCoin(Coin coin);
+        public virtual void PickupCoin(Coin coin)
+        {
+            if (!PickedUpCoins.Contains(coin))
+            {
+                Score += 100;
+                PickedUpCoins.Add(coin);
+                coin.QueueFree();
+            }
+        }
 
-        public abstract void TouchFlag(Flag flag);
+        public virtual void TouchFlag(Flag flag)
+        {
+            if (!TouchedFlags.Contains(flag))
+            {
+                Score += 1000;
+                TouchedFlags.Add(flag);
+            }
+        }
         #endregion
 
         public enum RunnerState

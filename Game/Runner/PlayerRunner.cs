@@ -22,20 +22,12 @@ namespace A_NEAT_arena.Game
 
         public override void PickupCoin(Coin coin)
         {
-            if (!PickedUpCoins.Contains(coin))
-            {
-                Score += 100;
-                PickedUpCoins.Add(coin);
-                coin.QueueFree();
-            }
+            base.PickupCoin(coin);
         }
 
         public override void TouchFlag(Flag flag)
         {
-            if (!TouchedFlags.Contains(flag))
-            {
-                Score += 1000;
-            }
+            base.TouchFlag(flag);
         }
     } 
 }
