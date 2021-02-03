@@ -10,11 +10,11 @@ namespace A_NEAT_arena.Game
         /// <summary>
         /// Jump speed in pixels per second.
         /// </summary>
-        [Export] public float JumpSpeed { get; set; } = 500;
+        [Export] public float JumpSpeed { get; set; } = 480;
         /// <summary>
         /// Gravitational acceleration in pixels per second sqared.
         /// </summary>
-        [Export] private float Gravity { get; set; } = 500;
+        [Export] private float Gravity { get; set; } = 1920;
         /// <summary>
         /// Maximum horizontal velocity in pixels per second.
         /// </summary>
@@ -30,11 +30,11 @@ namespace A_NEAT_arena.Game
         /// <summary>
         /// Friction sliding along a wall
         /// </summary>
-        [Export] private float WallFriction { get; set; } = 300;
+        [Export] private float WallFriction { get; set; } = 1860;
         /// <summary>
-        /// The amount of time in seconds the runner ca accelerate upwards. 
+        /// The amount of time in seconds the runner can accelerate upwards. 
         /// </summary>
-        [Export] private float MaxJumpTime { get; set; }
+        [Export] private float MaxJumpTime { get; set; } = 0.5f;
 
         [Signal] public delegate void Died(BaseRunner sender);
         public event Died DiedEvent;
@@ -65,8 +65,8 @@ namespace A_NEAT_arena.Game
                 wallJump[0] = (State == RunnerState.OnLeftWall) ? 1 : -1;
                 wallJump[1] = -1;
                 wallJump = wallJump.Normalized() * JumpSpeed;
-                Velocity += wallJump;
-                State = RunnerState.Neutral;
+                Velocity = wallJump;
+                State = RunnerState.Airborne;
             }
         }
 
@@ -103,7 +103,7 @@ namespace A_NEAT_arena.Game
                     break;
 
                 case RunnerState.Grounded: // On ground. Can jump and move with full acceleration
-                    JumpTimeLeft = 0.5f;
+                    JumpTimeLeft = MaxJumpTime;
                     Velocity.x = CalcVelocityChange(Velocity.x, Acceleration * Move, delta, Friction, MaxSpeed);
                     if (Jump)
                     {
@@ -123,6 +123,7 @@ namespace A_NEAT_arena.Game
 
                 case RunnerState.OnLeftWall:
                 case RunnerState.OnRightWall:
+                    JumpTimeLeft = MaxJumpTime;
                     Velocity.y = CalcVelocityChange(Velocity.y, Gravity, delta, WallFriction);
                     WallJump();
                     break;
@@ -154,9 +155,9 @@ namespace A_NEAT_arena.Game
 
             if (collNum > 0)
             {
-                if (newVelocity.y == 0 && Velocity.y > 0)
+                if (newVelocity.y == 0)
                 {
-                    State = RunnerState.Grounded;
+                    State = Velocity.y > 0 ? RunnerState.Grounded : RunnerState.Neutral;
                 }
                 else if (newVelocity.x == 0)
                 {
@@ -164,7 +165,7 @@ namespace A_NEAT_arena.Game
                     else if (Velocity.x < 0) State = RunnerState.OnLeftWall;
                 }
             }
-            else if (newVelocity.y > 0)
+            else if (newVelocity.y > 0 && State != RunnerState.Airborne)
             {
                 State = RunnerState.Neutral;
             }
