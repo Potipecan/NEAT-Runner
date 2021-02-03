@@ -1,15 +1,20 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Game/GameScene.cs" type="Script" id=1]
 [ext_resource path="res://Game/PlayArea.cs" type="Script" id=2]
 [ext_resource path="res://Game/UI/SetupOptions.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assests/Textures/DeathLaserBeam.tres" type="Texture" id=4]
+[ext_resource path="res://Assests/Fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 60, 540 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 10, 540 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 50
+font_data = ExtResource( 5 )
 
 [node name="GameScene" type="Node2D"]
 pause_mode = 2
@@ -52,10 +57,10 @@ position = Vector2( 1920, 0 )
 position = Vector2( 0, 540 )
 shape = SubResource( 2 )
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="MainCamera" type="Camera2D" parent="."]
 anchor_mode = 0
 
-[node name="HUD" type="Control" parent="."]
+[node name="HUD" type="Control" parent="MainCamera"]
 pause_mode = 2
 margin_left = 1.49832
 margin_top = 1.49829
@@ -65,13 +70,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SetupOptions" parent="HUD" instance=ExtResource( 3 )]
+[node name="SetupOptions" parent="MainCamera/HUD" instance=ExtResource( 3 )]
 margin_left = 89.3838
 margin_top = 76.1634
 margin_right = 424.384
 margin_bottom = 935.163
 
-[node name="GameOver" type="ColorRect" parent="HUD"]
+[node name="GameOver" type="ColorRect" parent="MainCamera/HUD"]
 visible = false
 anchor_left = 0.5
 anchor_top = 0.5
@@ -85,12 +90,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="HUD/GameOver"]
+[node name="Label" type="Label" parent="MainCamera/HUD/GameOver"]
 anchor_right = 1.0
 margin_bottom = 140.0
 text = "GAME OVER"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ScoreLabel" type="Label" parent="MainCamera/HUD"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -122.5
+margin_right = 122.5
+margin_bottom = 87.0
+custom_fonts/font = SubResource( 3 )
+text = "Score"
+align = 1
+valign = 1
 [connection signal="body_exited" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="OnBeamBodyExited"]
 [connection signal="body_exited" from="PlayArea/RunnerDetector" to="PlayArea" method="OnRunnerDetectorBodyEntered"]

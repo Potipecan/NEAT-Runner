@@ -5,6 +5,9 @@
 [node name="Segment" type="Node2D"]
 z_index = -2
 script = ExtResource( 1 )
+Plan = {
+
+}
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
 rect = Rect2( 0, 0, 1920, 1080 )

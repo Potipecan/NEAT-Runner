@@ -134,6 +134,8 @@ namespace A_NEAT_arena.Game
 
             //GD.Print($"{State} {Velocity}");
 
+            var oldpos = Position;
+
             // Movement and collision processing
             var newVelocity = MoveAndSlide(Velocity, new Vector2(0, -1));
             int collNum = GetSlideCount();
@@ -166,6 +168,8 @@ namespace A_NEAT_arena.Game
             {
                 State = RunnerState.Neutral;
             }
+
+            Score += Position.DistanceTo(oldpos) / 60f + delta;
 
             Velocity = newVelocity;
         }

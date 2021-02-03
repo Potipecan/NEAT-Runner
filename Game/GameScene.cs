@@ -11,6 +11,7 @@ namespace A_NEAT_arena.Game
         private Camera2D Camera;
         private PlayArea PlayArea;
         private SetupOptions SetupOptions;
+        private Label ScoreLabel;
 
         private List<BaseRunner> Runners;
 
@@ -25,9 +26,10 @@ namespace A_NEAT_arena.Game
             GetTree().Paused = true;
 
             // Nodes
-            Camera = GetNode<Camera2D>("Camera2D");
+            Camera = GetNode<Camera2D>("MainCamera");
             PlayArea = GetNode<PlayArea>("PlayArea");
-            SetupOptions = GetNode<SetupOptions>("HUD/SetupOptions");
+            SetupOptions = GetNode<SetupOptions>("MainCamera/HUD/SetupOptions");
+            ScoreLabel = GetNode<Label>("MainCamera/HUD/ScoreLabel");
 
             // Signals and events
             SetupOptions.StartEvent += OnStart;
@@ -45,6 +47,7 @@ namespace A_NEAT_arena.Game
             {
                 Runners.Sort(RunnerComparer);
                 Camera.Position = new Vector2(Runners[0].Position.x - 960, 0);
+                ScoreLabel.Text = Runners[0].Score.ToString("F0");
             }
         }
 
