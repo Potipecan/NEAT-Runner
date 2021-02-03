@@ -35,13 +35,13 @@ namespace A_NEAT_arena.Game
         }
 
         // Called when the node enters the scene tree for the first time.
-        public override void _Ready()
+        public override async void _Ready()
         {
             Start = GD.Load<PackedScene>("res://Game/Start.tscn");
             RunnerDetector = GetNode<Area2D>("RunnerDetector");
             DeathLaser = GetNode<Node2D>("DeathLaser");
 
-            Reset();
+            await Reset();
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -63,7 +63,7 @@ namespace A_NEAT_arena.Game
             Gen.Seed = seed;
             Runners = runners;
 
-            Reset();
+            await Reset();
             await GenerateCourse(2);
 
             var pos = Course[0].Flag.Position + new Vector2(30, 30);
@@ -97,6 +97,7 @@ namespace A_NEAT_arena.Game
 
                 seg.Position = pos;
                 Course.Add(seg);
+                seg.FreedEvent += OnSegmentFreed;
                 CallDeferred("add_child", seg);
                 await ToSignal(seg, "ready");
 
@@ -107,18 +108,21 @@ namespace A_NEAT_arena.Game
         /// <summary>
         /// Resets the PlayArea
         /// </summary>
-        private void Reset()
+        private async Task Reset()
         {
             if (IsReset) return;
 
             Time = 0f;            
 
             Course.ForEach(s => s.QueueFree());
+            Course.Clear();
 
             var start = Start.Instance() as Segment;
             start.Position = new Vector2(0, 0);
+            start.FreedEvent += OnSegmentFreed;
             Course.Add(start);
-            AddChild(start);
+            CallDeferred("add_child", start);
+            await ToSignal(start, "ready");
 
             RunnerDetector.Position = new Vector2(1920, 0);
             DeathLaser.Position = new Vector2(-30, 0);
@@ -134,9 +138,15 @@ namespace A_NEAT_arena.Game
         /// <param name="body">Obsolete node</param>
         public void OnBeamBodyExited(Node body)
         {
-            if (body.GetType() == typeof(TileMap))
+            var type = body.GetType();
+            if (type == typeof(TileMap))
             {
                 body.GetParent<Segment>().IsObsolete = true;
+            }
+            else if (type.IsSubclassOf(typeof(BaseRunner)))
+            {
+                GD.Print("player");
+                (body as BaseRunner).Die(this);
             }
         }
 
@@ -155,18 +165,24 @@ namespace A_NEAT_arena.Game
             }
         }
 
-        private void OnRunnerDied(BaseRunner runner)
+        private void OnSegmentFreed(Segment sender)
+        {
+            Course.Remove(sender);
+        }
+
+        private async void OnRunnerDied(BaseRunner runner)
         {
             if(runner.GetType() != typeof(PlayerRunner))
             {
                 
             }
 
+            Runners.Remove(runner);
             runner.QueueFree();
 
             if (Runners.Count < 1)
             {
-                Reset();
+                await Reset();
                 GetTree().Paused = true;
                 GameOverEvent?.Invoke();
             }

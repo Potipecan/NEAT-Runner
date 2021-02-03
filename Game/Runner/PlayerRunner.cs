@@ -9,6 +9,7 @@ namespace A_NEAT_arena.Game
 
         public override void Die(Node2D cause)
         {
+            base.Die(cause);
         }
 
         protected override void HandleInput()

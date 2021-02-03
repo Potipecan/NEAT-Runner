@@ -132,7 +132,7 @@ namespace A_NEAT_arena.Game
 
             if (State == RunnerState.Neutral || State == RunnerState.Grounded) Velocity.y += Gravity * delta;
 
-            GD.Print($"{State} {Velocity}");
+            //GD.Print($"{State} {Velocity}");
 
             // Movement and collision processing
             var newVelocity = MoveAndSlide(Velocity, new Vector2(0, -1));

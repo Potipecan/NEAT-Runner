@@ -57,8 +57,10 @@ anchor_mode = 0
 
 [node name="HUD" type="Control" parent="."]
 pause_mode = 2
-margin_right = 1920.0
-margin_bottom = 1080.0
+margin_left = 1.49832
+margin_top = 1.49829
+margin_right = 1921.5
+margin_bottom = 1081.5
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -68,5 +70,27 @@ margin_left = 89.3838
 margin_top = 76.1634
 margin_right = 424.384
 margin_bottom = 935.163
+
+[node name="GameOver" type="ColorRect" parent="HUD"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -275.0
+margin_top = -164.5
+margin_right = 275.0
+margin_bottom = 164.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="HUD/GameOver"]
+anchor_right = 1.0
+margin_bottom = 140.0
+text = "GAME OVER"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="body_exited" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="OnBeamBodyExited"]
 [connection signal="body_exited" from="PlayArea/RunnerDetector" to="PlayArea" method="OnRunnerDetectorBodyEntered"]

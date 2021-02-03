@@ -7,6 +7,9 @@ namespace A_NEAT_arena.Game
     [Tool]
     public class Segment : Node2D
     {
+        public delegate void Freed(Segment sender);
+        public event Freed FreedEvent;
+
         [Export] public Rect2 UsedRect;
         [Export] public Dictionary<int, Array<Vector2>> Plan;
         public Flag Flag;
@@ -132,7 +135,7 @@ namespace A_NEAT_arena.Game
 
                             AddChild(flag);
                             flag.Owner = this;
-                            FlagName = flag.Name; 
+                            FlagName = flag.Name;
                             UsedRect = UsedRect.Expand(tile);
                         }
                         catch (Exception ex)
@@ -149,7 +152,11 @@ namespace A_NEAT_arena.Game
 
         public void OnViewportExited(Viewport vp)
         {
-            if (IsObsolete) QueueFree();
+            if (IsObsolete)
+            {
+                FreedEvent?.Invoke(this);
+                QueueFree();
+            }
         }
     }
 }

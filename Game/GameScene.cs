@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+
 namespace A_NEAT_arena.Game
 {
     public class GameScene : Node2D
@@ -30,7 +31,6 @@ namespace A_NEAT_arena.Game
 
             // Signals and events
             SetupOptions.StartEvent += OnStart;
-            SetupOptions.SegmentsLoadedEvent += OnSegmentsLoaded;
 
             PlayArea.CourseSegments = SetupOptions.LoadedSegments;
             PlayArea.GameOverEvent += OnGameOver;
@@ -62,13 +62,11 @@ namespace A_NEAT_arena.Game
             GetTree().Paused = false;
         }
 
-        private void OnSegmentsLoaded()
-        {
-            
-        }
 
         private void OnGameOver()
         {
+            Camera.Position = new Vector2();
+            SetupOptions.Show();
 
         }
 
@@ -78,6 +76,12 @@ namespace A_NEAT_arena.Game
             Best = 1,
             Laser = 2,
             Worst = 3,
+        }
+
+        private enum RunnerMode
+        {
+            NEAT = 0,
+            Player = 1
         }
 
         private static int RunnerComparer(BaseRunner x, BaseRunner y)
