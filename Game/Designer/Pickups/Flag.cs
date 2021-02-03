@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace A_NEAT_arena.Game
 {
-
+    [Tool]
     public class Flag : Area2D
     {
         private List<BaseRunner> TouchedRunners;
