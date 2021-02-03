@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ANNRunner.cs" type="Script" id=1]
+[ext_resource path="res://Game/Runner/BaseRunner.tscn" type="PackedScene" id=2]
+
+[node name="ANNRunner" instance=ExtResource( 2 )]
+position = Vector2( 0, 0 )
+script = ExtResource( 1 )
+
+[node name="BRRayCast" type="RayCast2D" parent="." index="2"]
+position = Vector2( 30, 30 )
+rotation = -0.785398
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="MRRayCast" type="RayCast2D" parent="." index="3"]
+position = Vector2( 30, 0 )
+rotation = -1.5708
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="TRRayCast" type="RayCast2D" parent="." index="4"]
+position = Vector2( 30, -30 )
+rotation = -2.35619
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="TMRayCast" type="RayCast2D" parent="." index="5"]
+position = Vector2( 0, -30 )
+rotation = 3.14159
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="TLRayCast" type="RayCast2D" parent="." index="6"]
+position = Vector2( -30, -30 )
+rotation = 2.35619
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="MLRayCast" type="RayCast2D" parent="." index="7"]
+position = Vector2( -30, 0 )
+rotation = 1.5708
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="BLRayCast" type="RayCast2D" parent="." index="8"]
+position = Vector2( -30, 30 )
+rotation = 0.785398
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
+
+[node name="BMRayCast" type="RayCast2D" parent="." index="9"]
+position = Vector2( 0, 30 )
+enabled = true
+cast_to = Vector2( 0, 1920 )
+collision_mask = 30
+collide_with_areas = true
