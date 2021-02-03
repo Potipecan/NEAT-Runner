@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Assests/Fonts/MenuButtonFont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Game/UI/NEATSettings.cs" type="Script" id=2]
 
 [node name="NEATSettings" type="ColorRect"]
 margin_right = 334.0
 margin_bottom = 718.0
 color = Color( 0.439216, 0.439216, 0.439216, 1 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
