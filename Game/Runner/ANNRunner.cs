@@ -1,18 +1,24 @@
 using Godot;
 using System.Collections.Generic;
 using System;
+using SharpNeat.Phenomes;
+using SharpNeat.EvolutionAlgorithms;
+
 
 namespace A_NEAT_arena.Game
 {
     public class ANNRunner : BaseRunner
     {
+        IBlackBox _brain;
         private List<RayCast2D> Rays;
+
+        
+        
 
         public ANNRunner() : base()
         {
             Rays = new List<RayCast2D>();
         }
-
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -25,6 +31,11 @@ namespace A_NEAT_arena.Game
             Rays.Add(GetNode<RayCast2D>("MLRayCast"));
             Rays.Add(GetNode<RayCast2D>("BLRayCast"));
             Rays.Add(GetNode<RayCast2D>("BMRayCast"));
+        }
+
+        public void Init(IBlackBox brain)
+        {
+            _brain = brain;
         }
 
         protected override void HandleInput()
