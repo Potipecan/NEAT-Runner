@@ -49,7 +49,6 @@ namespace A_NEAT_arena.NEAT
 
         public void InitializeNetwork()
         {
-
         }
     }
 }

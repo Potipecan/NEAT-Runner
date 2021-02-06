@@ -65,7 +65,7 @@ namespace A_NEAT_arena.Game
     public static class Preloads
     {
         public static TileSet EnvTileSet, DangerTileSet;
-        public static PackedScene Coin, Flag, Segment, PlayerRunner;
+        public static PackedScene Coin, Flag, Segment, PlayerRunner, ANNRunner;
 
         static Preloads()
         {
@@ -75,6 +75,7 @@ namespace A_NEAT_arena.Game
             Flag = GD.Load<PackedScene>("res://Game/Designer/Pickups/Flag.tscn");
             Segment = GD.Load<PackedScene>("res://Game/Designer/Segment.tscn");
             PlayerRunner = GD.Load<PackedScene>("res://Game/Runner/PlayerRunner.tscn");
+            ANNRunner = GD.Load<PackedScene>("res://Game/Runner/ANNRunner.tscn");
         }
 
     }

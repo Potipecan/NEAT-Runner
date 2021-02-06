@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System;
 using SharpNeat.Phenomes;
 using SharpNeat.EvolutionAlgorithms;
-
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace A_NEAT_arena.Game
 {
@@ -11,6 +12,7 @@ namespace A_NEAT_arena.Game
     {
         IBlackBox _brain;
         private List<RayCast2D> Rays;
+        private SemaphoreSlim DeathSignal;
 
         
         
@@ -18,6 +20,7 @@ namespace A_NEAT_arena.Game
         public ANNRunner() : base()
         {
             Rays = new List<RayCast2D>();
+            DeathSignal = new SemaphoreSlim(0, 1);
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -93,10 +96,10 @@ namespace A_NEAT_arena.Game
             //GD.Print($"{chk}");
         }
 
-        //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-        //  public override void _Process(float delta)
-        //  {
-        //      
-        //  }
+        public override void Die(Node2D cause)
+        {
+            EmitSignal(nameof(Died), this);
+            base.Die(cause);
+        }
     }
 }

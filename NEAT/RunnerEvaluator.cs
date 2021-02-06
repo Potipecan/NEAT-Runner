@@ -9,15 +9,27 @@ using A_NEAT_arena.Game;
 
 namespace A_NEAT_arena.NEAT
 {
-    class RunnerEvaluator : IPhenomeEvaluator<IBlackBox>
+    class RunnerEvaluator : Godot.Object, IPhenomeEvaluator<IBlackBox>
     {
-        public ulong EvaluationCount => throw new NotImplementedException();
+        public ulong EvaluationCount => 0;
 
-        public bool StopConditionSatisfied => throw new NotImplementedException();
+        public bool StopConditionSatisfied => testEnv.Stop;
+
+        private GameScene testEnv;
+
+        public RunnerEvaluator(GameScene env)
+        {
+            testEnv = env;
+        }
 
         public FitnessInfo Evaluate(IBlackBox phenome)
         {
-            throw new NotImplementedException();
+            
+            var runner = testEnv.AddANNRunner(phenome);
+            Task.Run(async () => await ToSignal(runner, nameof(BaseRunner.Died))).Wait();
+            FitnessInfo res = new FitnessInfo(runner.Score, runner.Score);
+
+            return res;
         }
 
         public void Reset()

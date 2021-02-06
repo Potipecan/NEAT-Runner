@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using SharpNeat.Phenomes;
 
 namespace A_NEAT_arena.Game
 {
@@ -15,9 +16,19 @@ namespace A_NEAT_arena.Game
 
         private List<BaseRunner> Runners;
 
+        public bool Stop;
+
         public GameScene() : base() 
         {
             Runners = new List<BaseRunner>();    
+        }
+
+        public ANNRunner AddANNRunner(IBlackBox box)
+        {
+            var runner = Preloads.ANNRunner.Instance() as ANNRunner;
+            runner.Init(box);
+            Runners.Add(runner);
+            return runner;
         }
 
 

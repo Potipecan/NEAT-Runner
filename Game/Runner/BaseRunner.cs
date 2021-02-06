@@ -48,6 +48,7 @@ namespace A_NEAT_arena.Game
         protected List<Coin> PickedUpCoins;
         protected List<Flag> TouchedFlags;
         public float Score { get; set; }
+        public bool IsDead { get; set; }
 
         public BaseRunner() : base()
         {
@@ -55,6 +56,7 @@ namespace A_NEAT_arena.Game
             State = RunnerState.Neutral;
             PickedUpCoins = new List<Coin>();
             TouchedFlags = new List<Flag>();
+            IsDead = false;
         }
 
         protected void WallJump()
