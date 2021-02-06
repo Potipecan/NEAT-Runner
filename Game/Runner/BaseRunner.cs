@@ -41,7 +41,16 @@ namespace A_NEAT_arena.Game
 
         protected bool Jump;
         protected float JumpTimeLeft;
-        protected float Move;
+        protected float move;
+        protected float Move
+        {
+            get => move; set
+            {
+                if (value > 1f) move = 1f;
+                else if (value < -1f) move = -1f;
+                else move = value;
+            }
+        }
         protected Vector2 Velocity;
         protected RunnerState State;
 

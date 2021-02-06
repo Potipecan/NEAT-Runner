@@ -42,21 +42,20 @@ namespace A_NEAT_arena.Game
         }
 
         protected override void HandleInput()
-        {
-            var inputs = new float[18];
+        {            
             int c = 0;
 
             foreach(var r in Rays)
             {
                 // get distance to colliding object
-                inputs[c] = r.GetCollisionPoint().DistanceTo(r.GlobalPosition);
+                _brain.InputSignalArray[c] = r.GetCollisionPoint().DistanceTo(r.GlobalPosition);
                 c++;
 
                 #region get type of colliding object
                 var coll = (Node)r.GetCollider();
                 if(coll == null)
                 {
-                    inputs[c] = 0f;
+                    _brain.InputSignalArray[c] = 0f;
                     c++;
                     continue;
                 }
@@ -67,33 +66,40 @@ namespace A_NEAT_arena.Game
                     switch (groups[0])
                     {
                         case "Environment":
-                            inputs[c] = 2f;
+                            _brain.InputSignalArray[c] = 2f;
                             break;
                         case "Coins":
-                            inputs[c] = 3f;
+                            _brain.InputSignalArray[c] = 3f;
                             break;
                         case "Flags":
-                            inputs[c] = 4f;
+                            _brain.InputSignalArray[c] = 4f;
                             break;
                         case "Danger":
-                            inputs[c] = 5f;
+                            _brain.InputSignalArray[c] = 5f;
                             break;
                         default:
-                            inputs[c] = 0f;
+                            _brain.InputSignalArray[c] = 0f;
                             break;
                     }
                 }
-                else inputs[c] = 0f;
+                else _brain.InputSignalArray[c] = 0f;
                 #endregion
                 c++;
             };
 
-            inputs[c] = Position.x;
-            inputs[c + 1] = Position.y;
+            _brain.InputSignalArray[c] = Position.x;
+            _brain.InputSignalArray[c + 1] = Position.y;
 
             //string chk = "";
             //foreach (var s in inputs) { chk += $"{s}, "; }
             //GD.Print($"{chk}");
+
+            // process inputs
+            _brain.Activate();
+
+            // process outputs
+            Move = (float)_brain.OutputSignalArray[0];
+            Jump = _brain.OutputSignalArray[1] > 0f;
         }
 
         public override void Die(Node2D cause)
