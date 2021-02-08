@@ -1,9 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assests/Fonts/MenuButtonFont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Game/UI/NEATSettings.cs" type="Script" id=2]
+[ext_resource path="res://Assests/Fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 3 )
 
 [node name="NEATSettings" type="ColorRect"]
+pause_mode = 2
 margin_right = 334.0
 margin_bottom = 718.0
 color = Color( 0.439216, 0.439216, 0.439216, 1 )
@@ -17,6 +22,9 @@ margin_left = 224.0
 margin_top = 88.0
 margin_right = 311.0
 margin_bottom = 112.0
+min_value = 1.0
+max_value = 50.0
+value = 30.0
 
 [node name="Label" type="Label" parent="SpeciesNumSB"]
 margin_left = -120.0
@@ -26,13 +34,16 @@ text = "Number of species"
 align = 2
 valign = 1
 
-[node name="GensizeSB" type="SpinBox" parent="."]
+[node name="PopulationSB" type="SpinBox" parent="."]
 margin_left = 224.0
 margin_top = 128.0
 margin_right = 311.0
 margin_bottom = 152.0
+min_value = 1.0
+max_value = 1000.0
+value = 200.0
 
-[node name="Label" type="Label" parent="GensizeSB"]
+[node name="Label" type="Label" parent="PopulationSB"]
 margin_left = -136.0
 margin_right = 2.0
 margin_bottom = 24.0
@@ -46,6 +57,9 @@ margin_left = 224.0
 margin_top = 168.0
 margin_right = 311.0
 margin_bottom = 192.0
+min_value = 1.0
+max_value = 50.0
+value = 4.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -65,3 +79,24 @@ custom_fonts/font = ExtResource( 1 )
 text = "NEAT settings"
 align = 1
 valign = 1
+
+[node name="SetParamsButton" type="Button" parent="."]
+pause_mode = 2
+anchor_left = 0.0718563
+anchor_top = 0.913649
+anchor_right = 0.934204
+anchor_bottom = 0.969504
+margin_right = -0.0240011
+margin_bottom = -0.104
+custom_fonts/font = SubResource( 1 )
+text = "Set parameters"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="ConfirmDialog" type="ConfirmationDialog" parent="."]
+margin_right = 200.0
+margin_bottom = 70.0
+window_title = "Setting parameters"
+dialog_text = "Warning!
+Setting new parameters will abort the currently running experiment."

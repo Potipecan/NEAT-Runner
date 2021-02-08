@@ -11,7 +11,7 @@ namespace A_NEAT_arena.Game
         public event GameOver GameOverEvent;
 
         public List<BaseRunner> Runners { get; set; }
-        public List<PackedScene> CourseSegments { get; set; }        
+        public List<PackedScene> CourseSegments { get; set; }
 
         public float Time { get; set; }
         public float LaserSpeed { get; set; }
@@ -67,7 +67,7 @@ namespace A_NEAT_arena.Game
             await GenerateCourse(2);
 
             var pos = Course[0].Flag.Position + new Vector2(30, 30);
-            foreach(var runner in runners)
+            foreach (var runner in runners)
             {
                 runner.Position = pos;
                 CallDeferred("add_child", runner);
@@ -84,8 +84,8 @@ namespace A_NEAT_arena.Game
         private async Task GenerateCourse(int rep = 1)
         {
             if (CourseSegments.Count == 0) throw new Exception("No course segments given.");
-            
-            for(; rep >= 0; rep--)
+
+            for (; rep >= 0; rep--)
             {
                 uint genidx = Gen.Randi() % (uint)CourseSegments.Count;
                 GD.Print($"Loaded course segments: {CourseSegments.Count}, selected: {genidx}");
@@ -108,14 +108,15 @@ namespace A_NEAT_arena.Game
         /// <summary>
         /// Resets the PlayArea
         /// </summary>
-        private async Task Reset()
+        public async Task Reset()
         {
             if (IsReset) return;
 
-            Time = 0f;            
+            Time = 0f;
 
             Course.ForEach(s => s.QueueFree());
             Course.Clear();
+
 
             var start = Start.Instance() as Segment;
             start.Position = new Vector2(0, 0);
@@ -126,7 +127,6 @@ namespace A_NEAT_arena.Game
 
             RunnerDetector.Position = new Vector2(1920, 0);
             DeathLaser.Position = new Vector2(-30, 0);
-
 
             IsReset = true;
         }
@@ -172,9 +172,9 @@ namespace A_NEAT_arena.Game
 
         private async void OnRunnerDied(BaseRunner runner)
         {
-            if(runner.GetType() != typeof(PlayerRunner))
+            if (runner.GetType() != typeof(PlayerRunner))
             {
-                
+
             }
 
             Runners.Remove(runner);

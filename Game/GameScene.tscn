@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Game/GameScene.cs" type="Script" id=1]
 [ext_resource path="res://Game/PlayArea.cs" type="Script" id=2]
 [ext_resource path="res://Game/UI/SetupOptions.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assests/Textures/DeathLaserBeam.tres" type="Texture" id=4]
 [ext_resource path="res://Assests/Fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Game/UI/NEATSettings.tscn" type="PackedScene" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 60, 540 )
@@ -58,55 +59,76 @@ position = Vector2( 0, 540 )
 shape = SubResource( 2 )
 
 [node name="MainCamera" type="Camera2D" parent="."]
+pause_mode = 2
 anchor_mode = 0
 
-[node name="HUD" type="Control" parent="MainCamera"]
+[node name="SettingsHUD" type="Control" parent="MainCamera"]
 pause_mode = 2
-margin_left = 1.49832
-margin_top = 1.49829
-margin_right = 1921.5
-margin_bottom = 1081.5
+margin_right = 1920.0
+margin_bottom = 1080.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SetupOptions" parent="MainCamera/HUD" instance=ExtResource( 3 )]
-margin_left = 89.3838
-margin_top = 76.1634
-margin_right = 424.384
-margin_bottom = 935.163
+[node name="NEATSettings" parent="MainCamera/SettingsHUD" instance=ExtResource( 6 )]
+margin_left = 448.0
+margin_top = 64.0
+margin_right = 782.0
+margin_bottom = 782.0
 
-[node name="GameOver" type="ColorRect" parent="MainCamera/HUD"]
-visible = false
+[node name="SetupOptions" parent="MainCamera/SettingsHUD" instance=ExtResource( 3 )]
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 399.0
+margin_bottom = 923.0
+
+[node name="ButtonPanel" type="ColorRect" parent="MainCamera/SettingsHUD"]
+anchor_left = 0.102
+anchor_top = 0.015
+anchor_right = 0.112
+anchor_bottom = 0.037
+margin_left = 636.16
+margin_top = 47.8
+margin_right = 808.96
+margin_bottom = 216.04
+color = Color( 0.439216, 0.439216, 0.439216, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartContinueBtn" type="Button" parent="MainCamera/SettingsHUD/ButtonPanel"]
+anchor_right = 0.208
+anchor_bottom = 0.167
+margin_left = 24.0
+margin_top = 80.0
+margin_right = 128.064
+margin_bottom = 87.936
+text = "Quit"
+
+[node name="QuitButton" type="Button" parent="MainCamera/SettingsHUD/ButtonPanel"]
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 168.0
+margin_bottom = 64.0
+text = "Start"
+
+[node name="GameHUD" type="Control" parent="MainCamera"]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoreLabel" type="Label" parent="MainCamera/GameHUD"]
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -275.0
-margin_top = -164.5
-margin_right = 275.0
-margin_bottom = 164.5
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="MainCamera/HUD/GameOver"]
-anchor_right = 1.0
-margin_bottom = 140.0
-text = "GAME OVER"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ScoreLabel" type="Label" parent="MainCamera/HUD"]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -122.5
-margin_right = 122.5
+margin_left = 832.0
+margin_right = 1088.0
 margin_bottom = 87.0
 custom_fonts/font = SubResource( 3 )
 text = "Score"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="body_exited" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="OnBeamBodyExited"]
 [connection signal="body_exited" from="PlayArea/RunnerDetector" to="PlayArea" method="OnRunnerDetectorBodyEntered"]

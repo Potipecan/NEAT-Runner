@@ -5,6 +5,7 @@ using SharpNeat.Phenomes;
 using SharpNeat.EvolutionAlgorithms;
 using System.Threading;
 using System.Threading.Tasks;
+using A_NEAT_arena.NEAT;
 
 namespace A_NEAT_arena.Game
 {
@@ -13,6 +14,7 @@ namespace A_NEAT_arena.Game
         IBlackBox _brain;
         private List<RayCast2D> Rays;
         private SemaphoreSlim DeathSignal;
+        private PhenomePack pack;
 
         
         
@@ -36,9 +38,10 @@ namespace A_NEAT_arena.Game
             Rays.Add(GetNode<RayCast2D>("BMRayCast"));
         }
 
-        public void Init(IBlackBox brain)
+        public void Init(PhenomePack set)
         {
-            _brain = brain;
+            _brain = set.Phenome;
+            pack = set;
         }
 
         protected override void HandleInput()
@@ -105,6 +108,8 @@ namespace A_NEAT_arena.Game
         public override void Die(Node2D cause)
         {
             EmitSignal(nameof(Died), this);
+            pack.Score = Score;
+            pack.Destination.Start();
             base.Die(cause);
         }
     }

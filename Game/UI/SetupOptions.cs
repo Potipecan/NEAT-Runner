@@ -111,7 +111,6 @@ namespace A_NEAT_arena.Game
 
         public void OnStartButtonPressed()
         {
-            Hide();
             StartEvent?.Invoke();
         }
 
