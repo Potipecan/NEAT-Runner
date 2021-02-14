@@ -131,7 +131,6 @@ namespace A_NEAT_arena.Game
                 Score += 1000;
                 TouchedFlags.Add(flag);
                 Rays.ForEach(r => r.AddException(flag));
-
             }
         }
     }

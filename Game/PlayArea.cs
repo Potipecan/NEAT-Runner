@@ -88,7 +88,7 @@ namespace A_NEAT_arena.Game
             for (; rep >= 0; rep--)
             {
                 uint genidx = Gen.Randi() % (uint)CourseSegments.Count;
-                GD.Print($"Loaded course segments: {CourseSegments.Count}, selected: {genidx}");
+                //GD.Print($"Loaded course segments: {CourseSegments.Count}, selected: {genidx}");
 
                 var seg = CourseSegments[(int)genidx].Instance() as Segment;
 
