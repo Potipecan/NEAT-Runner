@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using SharpNeat.Phenomes;
 using A_NEAT_arena.NEAT;
 using SharpNeat.EvolutionAlgorithms;
+using System.Threading.Tasks;
 
 namespace A_NEAT_arena.Game
 {
@@ -13,28 +14,34 @@ namespace A_NEAT_arena.Game
 
         private SceneTree _tree;
         private Camera2D Camera;
-        private PlayArea PlayArea;
+        public PlayArea PlayArea;
         private SetupOptions SetupOptions;
         private Label ScoreLabel;
         private NEATSettings NeatSettings;
         private Control GameHUD, SettingsHUD;
 
-        private List<BaseRunner> Runners;
-        public List<PhenomePack> Boxes;
+        public List<BaseRunner> Runners;
+        //public List<PhenomePack> Boxes;
         private RunnerMode Mode;
         private int generation;
         private int batch;
         private int batchSize;
 
-        private NeatExperiment neat;
+        private NeatController neat;
+        private PlayerGameController pgc;
+
+        private IGameController controller;
 
         public bool Stop { get; set; }
 
         public GameScene() : base()
         {
             Runners = new List<BaseRunner>();
-            Boxes = new List<PhenomePack>();
             Mode = RunnerMode.Player;
+
+            pgc = new PlayerGameController(this);
+            neat = new NeatController(this);
+            controller = pgc;
         }
 
         public override void _Ready()
@@ -55,67 +62,35 @@ namespace A_NEAT_arena.Game
 
             PlayArea = GetNode<PlayArea>("PlayArea");
 
-            PlayArea.CourseSegments = SetupOptions.LoadedSegments;
-
             // Signals and events
             SetupOptions.StartEvent += OnStart;
             PlayArea.GameOverEvent += OnGameOver;
             NeatSettings.ParametersSet += On_NeatSettings_ParametersSet;
+            SetupOptions.GamemodeSwitched += On_SetupOptions_GamemodeSwitched;
+
+            PlayArea.CourseSegments = SetupOptions.LoadedSegments;
 
             Camera.MakeCurrent();
         }
 
+
         // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _PhysicsProcess(float delta)
         {
-            if (PlayArea.Runners.Count > 0)
-            {
-                PlayArea.Runners.Sort(RunnerComparer);
-                Camera.Position = new Vector2(PlayArea.Runners[0].Position.x - 960, 0);
-                ScoreLabel.Text = PlayArea.Runners[0].Score.ToString("F0");
-            }
+            controller.Process();
         }
 
-        public ANNRunner AddANNRunner(IBlackBox box)
+        public async void StartRun()
         {
-            var runner = Preloads.ANNRunner.Instance() as ANNRunner;
-            //runner.Init(box);
-            Runners.Add(runner);
-            StartRun();
-            return runner;
-        }
-
-        public void AddANNRunner(ANNRunner runner)
-        {
-            Runners.Add(runner);
-        }
-
-        public void AddPhenomePack(PhenomePack pack)
-        {
-            Boxes.Add(pack);
-            StartRun();
-        }
-
-        private async void StartRun()
-        {
-            var newRunners = new List<BaseRunner>();
-
             switch (Mode)
             {
                 case RunnerMode.Player:
-                    newRunners.Add(Preloads.PlayerRunner.Instance() as PlayerRunner);
+                    Runners.Clear();
+                    Runners.Add(Preloads.PlayerRunner.Instance() as PlayerRunner);
                     break;
 
                 case RunnerMode.AI:
-                    if (Runners.Count != NeatSettings.Population) return;
-
-                    var newBoxes = Boxes.GetRange(batch * batchSize, batchSize);
-                    foreach (var b in newBoxes)
-                    {
-                        var r = Preloads.ANNRunner.Instance() as ANNRunner;
-                        r.Init(b);
-                        newRunners.Add(r);
-                    }
+                    
                     batch++;
                     break;
             }
@@ -123,64 +98,54 @@ namespace A_NEAT_arena.Game
             SettingsHUD.Hide();
             PlayArea.LaserSpeed = SetupOptions.LaserSpeed;
             PlayArea.LaserAcc = SetupOptions.LaserAcc;
-            await PlayArea.Restart(newRunners, SetupOptions.Seed);
+            await PlayArea.Restart(Runners, SetupOptions.Seed);
             _tree.Paused = false;
         }
 
         #region Signals and events
-        private async void On_NeatSettings_ParametersSet(object sender, EventArgs e)
+        private void On_NeatSettings_ParametersSet(object sender, EventArgs e)
         {
+            if (Mode != RunnerMode.AI) throw new Exception("NEAT parameters can only be set when game is in AI mode");
+
+            Task.Run(async () => await PlayArea.Reset());
             _tree.Paused = true;
-            await PlayArea.Reset();
-
-            //var eaparams = new NeatEvolutionAlgorithmParameters()
-            //{
-            //    SpecieCount = NeatSettings.SpeciesNum
-            //};
-
-            Stop = false;
-            neat = new NeatExperiment(this, NeatSettings.NeatParams, NeatSettings.Population);
-            neat.InitializeNetwork();
-            neat.GenerationEnded += On_NeatExperiment_GenerationEnded;
-
-            batch = 0;
-            batchSize = NeatSettings.Population / NeatSettings.Batches;
-            generation = 0;
+            neat.InitializeNetwork(NeatSettings.NeatParams, NeatSettings.Population, NeatSettings.Population / NeatSettings.Batches);
         }
 
         private void On_NeatExperiment_GenerationEnded(object sender, EventArgs e)
         {
-            generation++;
+            //generation++;
         }
+
+        
 
         private void OnStart()
         {
-            switch (Mode)
-            {
-                case RunnerMode.Player:
-                    StartRun();
-                    break;
-                case RunnerMode.AI:
-                    neat.StartContinue();
-                    break;
-            }
+            controller.BeginGame();
 
         }
 
         private void OnGameOver()
         {
-            switch (Mode)
-            {
-                case RunnerMode.Player:
-                    StartRun();
-                    break;
-                case RunnerMode.AI:
-                    StartRun();
-                    break;
-            }
-            Camera.Position = new Vector2();
-            //SettingsHUD.Show();
+            controller.OnRoundEnded();
         }
+
+        private void On_SetupOptions_GamemodeSwitched(object sender, EventArgs e)
+        {
+            if (((CheckButton)sender).Pressed) // Evolution mode
+            {
+                controller = neat;
+                Mode = RunnerMode.AI;
+                NeatSettings.Show();
+            }
+            else // player mode
+            {
+                controller = pgc;
+                Mode = RunnerMode.Player;
+                NeatSettings.Hide();
+            }
+        }
+
         #endregion
 
         #region Utilities
@@ -199,7 +164,7 @@ namespace A_NEAT_arena.Game
 
         private static int RunnerComparer(BaseRunner x, BaseRunner y)
         {
-            return (int)(x.Score - y.Score);
+            return (int)(y.Score - x.Score);
         }
         #endregion
     }
