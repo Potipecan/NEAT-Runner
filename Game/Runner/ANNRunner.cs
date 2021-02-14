@@ -6,15 +6,16 @@ using SharpNeat.EvolutionAlgorithms;
 using System.Threading;
 using System.Threading.Tasks;
 using A_NEAT_arena.NEAT;
+using SharpNeat.Genomes.Neat;
 
 namespace A_NEAT_arena.Game
 {
     public class ANNRunner : BaseRunner
     {
-        IBlackBox _brain;
+        private IBlackBox _brain;
+        private NeatGenome _genome;
         private List<RayCast2D> Rays;
-        private SemaphoreSlim DeathSignal;
-        private PhenomePack pack;
+        //private PhenomePack pack;
 
         
         
@@ -22,7 +23,6 @@ namespace A_NEAT_arena.Game
         public ANNRunner() : base()
         {
             Rays = new List<RayCast2D>();
-            DeathSignal = new SemaphoreSlim(0, 1);
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -38,10 +38,11 @@ namespace A_NEAT_arena.Game
             Rays.Add(GetNode<RayCast2D>("BMRayCast"));
         }
 
-        public void Init(PhenomePack set)
+        public void Init(NeatGenome genome, IBlackBox phenome)
         {
-            _brain = set.Phenome;
-            pack = set;
+            _brain = phenome;
+            _genome = genome;
+            //pack = set;
         }
 
         protected override void HandleInput()
@@ -108,9 +109,30 @@ namespace A_NEAT_arena.Game
         public override void Die(Node2D cause)
         {
             EmitSignal(nameof(Died), this);
-            pack.Score = Score;
-            pack.Destination.Start();
+            //pack.Score = Score;
+            _genome.EvaluationInfo.SetFitness(Score);
             base.Die(cause);
+        }
+
+        public override void PickupCoin(Coin coin)
+        {
+            if (!PickedUpCoins.Contains(coin))
+            {
+                Score += 100;
+                PickedUpCoins.Add(coin);
+                Rays.ForEach(r => r.AddException(coin));
+            }
+        }
+
+        public override void TouchFlag(Flag flag)
+        {
+            if (!TouchedFlags.Contains(flag))
+            {
+                Score += 1000;
+                TouchedFlags.Add(flag);
+                Rays.ForEach(r => r.AddException(flag));
+
+            }
         }
     }
 }
