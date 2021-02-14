@@ -9,6 +9,8 @@ namespace A_NEAT_arena.Game
         public delegate void SegmentsLoaded();
         public event SegmentsLoaded SegmentsLoadedEvent;
 
+        public event EventHandler GamemodeSwitched;
+
         public delegate void Start();
         public event Start StartEvent;
 
@@ -19,6 +21,7 @@ namespace A_NEAT_arena.Game
         private SpinBox SeedBox;
         private SpinBox LSpeedInput;
         private SpinBox LAccInput;
+        private CheckButton GameModeSwitch;
 
         private List<string> SegmentPaths;
 
@@ -68,6 +71,7 @@ namespace A_NEAT_arena.Game
             RandomizeButton = SeedBox.GetNode<Button>("RandomizeButton");
             LSpeedInput = GetNode<SpinBox>("LaserSpeedInput");
             LAccInput = GetNode<SpinBox>("LaserAccInput");
+            GameModeSwitch = GetNode<CheckButton>("GameModeSwitch");
 
             SeedBox.Value = SeedGen.Randi();
         }
@@ -122,6 +126,11 @@ namespace A_NEAT_arena.Game
         public void OnRandomizeButtonPressed()
         {
             SeedBox.Value = SeedGen.Randi();
+        }
+
+        private void On_GameModeSwitch_Toggled()
+        {
+            GamemodeSwitched?.Invoke(GameModeSwitch, new EventArgs());
         }
     }
 }

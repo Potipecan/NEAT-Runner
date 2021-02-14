@@ -158,18 +158,14 @@ __meta__ = {
 }
 
 [node name="RandomSeedCheck" type="CheckButton" parent="."]
-margin_left = 103.665
+margin_left = 18.6652
 margin_top = 422.362
-margin_right = 179.665
+margin_right = 185.665
 margin_bottom = 462.362
-
-[node name="Label" type="Label" parent="RandomSeedCheck"]
-margin_left = -92.0
-margin_right = -1.0
-margin_bottom = 40.0
-text = "Random seed:"
-align = 2
-valign = 1
+text = "Random seed"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="."]
 margin_left = 16.0
@@ -179,6 +175,13 @@ margin_bottom = 554.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="GameModeSwitch" type="CheckButton" parent="."]
+margin_left = 14.6652
+margin_top = 596.278
+margin_right = 194.665
+margin_bottom = 636.278
+text = "Evolution mode"
 [connection signal="pressed" from="StartButton" to="." method="OnStartButtonPressed"]
 [connection signal="pressed" from="LoadButton" to="." method="OnLoadButtonPressed"]
 [connection signal="pressed" from="DeleteButton" to="." method="OnDeleteButtonPressed"]
