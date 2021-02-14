@@ -15,5 +15,7 @@ namespace A_NEAT_arena.Game
         void Resume();
 
         void OnRoundEnded();
+
+        void Process();
     }
 }
