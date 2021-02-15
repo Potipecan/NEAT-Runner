@@ -15,14 +15,26 @@ namespace A_NEAT_arena.Game
         private IBlackBox _brain;
         private NeatGenome _genome;
         private List<RayCast2D> Rays;
+        private Vector2 lastPosition;
+        private float idleTimer, idleTimeout;
+        private float IdleTimer
+        {
+            get => idleTimer;
+            set
+            {
+                idleTimer = value;
+                if (IdleTimer >= idleTimeout) Die(null);
+            }
+        }
         //private PhenomePack pack;
 
-        
-        
+
+
 
         public ANNRunner() : base()
         {
             Rays = new List<RayCast2D>();
+            idleTimeout = 0.5f;
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -38,6 +50,17 @@ namespace A_NEAT_arena.Game
             Rays.Add(GetNode<RayCast2D>("BMRayCast"));
         }
 
+        public override void _PhysicsProcess(float delta)
+        {
+            base._PhysicsProcess(delta);
+            if (GlobalPosition.IsEqualApprox(lastPosition)) IdleTimer += delta;
+            else
+            {
+                lastPosition = GlobalPosition;
+                IdleTimer = 0f;
+            }
+        }
+
         public void Init(NeatGenome genome, IBlackBox phenome)
         {
             _brain = phenome;
@@ -46,10 +69,10 @@ namespace A_NEAT_arena.Game
         }
 
         protected override void HandleInput()
-        {            
+        {
             int c = 0;
 
-            foreach(var r in Rays)
+            foreach (var r in Rays)
             {
                 // get distance to colliding object
                 _brain.InputSignalArray[c] = r.GetCollisionPoint().DistanceTo(r.GlobalPosition);
@@ -57,7 +80,7 @@ namespace A_NEAT_arena.Game
 
                 #region get type of colliding object
                 var coll = (Node)r.GetCollider();
-                if(coll == null)
+                if (coll == null)
                 {
                     _brain.InputSignalArray[c] = 0f;
                     c++;
@@ -102,15 +125,15 @@ namespace A_NEAT_arena.Game
             _brain.Activate();
 
             // process outputs
-            Move = (float)_brain.OutputSignalArray[0];
-            Jump = _brain.OutputSignalArray[1] > 0f;
+            Move = (float)_brain.OutputSignalArray[0] * 2f - 1f;
+            Jump = _brain.OutputSignalArray[1] > 0.5f;
         }
 
         public override void Die(Node2D cause)
         {
-            EmitSignal(nameof(Died), this);
             //pack.Score = Score;
             _genome.EvaluationInfo.SetFitness(Score);
+            //EmitSignal(nameof(Died), this);
             base.Die(cause);
         }
 
@@ -120,7 +143,7 @@ namespace A_NEAT_arena.Game
             {
                 Score += 100;
                 PickedUpCoins.Add(coin);
-                Rays.ForEach(r => r.AddException(coin));
+                Rays.ForEach(r => r.AddExceptionRid(coin.GetRid()));
             }
         }
 
@@ -130,7 +153,7 @@ namespace A_NEAT_arena.Game
             {
                 Score += 1000;
                 TouchedFlags.Add(flag);
-                Rays.ForEach(r => r.AddException(flag));
+                Rays.ForEach(r => r.AddExceptionRid(flag.GetRid()));
             }
         }
     }
