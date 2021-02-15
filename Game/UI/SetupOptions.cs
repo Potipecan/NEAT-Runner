@@ -16,7 +16,6 @@ namespace A_NEAT_arena.Game
 
         private ItemList SegmentList;
         private FileDialog SegmentLoader;
-        private Button StartButton;
         private Button RandomizeButton;
         private SpinBox SeedBox;
         private SpinBox LSpeedInput;
@@ -49,6 +48,13 @@ namespace A_NEAT_arena.Game
         }
         public float LaserSpeed { get => (float)LSpeedInput.Value; }
         public float LaserAcc { get => (float)LAccInput.Value; }
+        public bool IsEvolutionMode
+        {
+            get => GameModeSwitch.Pressed; set
+            {
+                GameModeSwitch.Pressed = value;
+            }
+        }
         public List<PackedScene> LoadedSegments { get; set; }
 
         public SetupOptions() : base()
@@ -66,7 +72,6 @@ namespace A_NEAT_arena.Game
 
             SegmentList = GetNode<ItemList>("LoadedSegments");
             SegmentLoader = GetNode<FileDialog>("SegmentLoader");
-            StartButton = GetNode<Button>("StartButton");
             SeedBox = GetNode<SpinBox>("SeedInput");
             RandomizeButton = SeedBox.GetNode<Button>("RandomizeButton");
             LSpeedInput = GetNode<SpinBox>("LaserSpeedInput");
@@ -74,6 +79,8 @@ namespace A_NEAT_arena.Game
             GameModeSwitch = GetNode<CheckButton>("GameModeSwitch");
 
             SeedBox.Value = SeedGen.Randi();
+
+            GameModeSwitch.Connect("toggled", this, nameof(On_GameModeSwitch_Toggled));
         }
 
         public void OnLoadButtonPressed()
@@ -93,7 +100,6 @@ namespace A_NEAT_arena.Game
                     SegmentPaths.RemoveAt(id);
                 }
 
-                if (LoadedSegments.Count == 0) StartButton.Disabled = true;
             }
         }
 
@@ -109,7 +115,6 @@ namespace A_NEAT_arena.Game
                 }
             }
 
-            if (SegmentList.GetItemCount() > 0) StartButton.Disabled = false;
             SegmentsLoadedEvent?.Invoke();
         }
 
@@ -128,7 +133,7 @@ namespace A_NEAT_arena.Game
             SeedBox.Value = SeedGen.Randi();
         }
 
-        private void On_GameModeSwitch_Toggled()
+        public void On_GameModeSwitch_Toggled(bool pressed)
         {
             GamemodeSwitched?.Invoke(GameModeSwitch, new EventArgs());
         }
