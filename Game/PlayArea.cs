@@ -67,13 +67,17 @@ namespace A_NEAT_arena.Game
             await GenerateCourse(2);
 
             var pos = Course[0].Flag.Position + new Vector2(30, 30);
-            foreach (var runner in runners)
+            int spawnedcnt = 0;
+            foreach (var runner in Runners)
             {
                 runner.Position = pos;
                 CallDeferred("add_child", runner);
                 await ToSignal(runner, "ready");
+                spawnedcnt++;
                 runner.DiedEvent += OnRunnerDied;
             }
+            GD.Print($"Runner count: {Runners.Count}, Spawned: {spawnedcnt}");
+
         }
 
         /// <summary>
@@ -115,8 +119,9 @@ namespace A_NEAT_arena.Game
             Time = 0f;
 
             Course.ForEach(s => s.QueueFree());
-            Course.Clear();
+            System.Threading.Thread.Sleep(200);
 
+            Course.Clear();
 
             var start = Start.Instance() as Segment;
             start.Position = new Vector2(0, 0);
@@ -143,11 +148,6 @@ namespace A_NEAT_arena.Game
             {
                 body.GetParent<Segment>().IsObsolete = true;
             }
-            else if (type.IsSubclassOf(typeof(BaseRunner)))
-            {
-                GD.Print("player");
-                (body as BaseRunner).Die(this);
-            }
         }
 
         /// <summary>
@@ -163,6 +163,11 @@ namespace A_NEAT_arena.Game
                 var pos = Course[Course.Count - 2].Position;
                 RunnerDetector.Position = pos;
             }
+        }
+
+        private void On_Beam_BodyEntered(Node body)
+        {
+            if (body.GetType().IsSubclassOf(typeof(BaseRunner))) (body as BaseRunner).Die(null);
         }
 
         private void OnSegmentFreed(Segment sender)
@@ -182,8 +187,9 @@ namespace A_NEAT_arena.Game
 
             if (Runners.Count < 1)
             {
-                await Reset();
                 GetTree().Paused = true;
+
+                await Reset();
                 GameOverEvent?.Invoke();
             }
         }

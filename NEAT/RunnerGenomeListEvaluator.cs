@@ -15,6 +15,9 @@ namespace A_NEAT_arena.NEAT
 {
     class RunnerGenomeListEvaluator : IGenomeListEvaluator<NeatGenome>
     {
+        private delegate void RunStarter(List<BaseRunner> runners);
+        private event RunStarter StartRun;
+
         public ulong EvaluationCount => 0;
 
         public bool StopConditionSatisfied => false;
@@ -25,53 +28,78 @@ namespace A_NEAT_arena.NEAT
         private GameScene _testEnv;
         private IGenomeDecoder<NeatGenome, IBlackBox> _genomeDecoder;
         private List<BaseRunner> _runnersBatch;
+        private List<BaseRunner> _oldcache, _newcache;
         private SemaphoreSlim batchWaiter;
         private int listIndex;
+        private bool cont;
 
         public RunnerGenomeListEvaluator(IGenomeDecoder<NeatGenome, IBlackBox> genomeDecoder, GameScene testenv)
         {
             _testEnv = testenv;
             _testEnv.PlayArea.GameOverEvent += OnBatchEnded;
+            //StartRun += _testEnv.StartRun;
+
             _genomeDecoder = genomeDecoder;
-            _runnersBatch = new List<BaseRunner>();
-            batchWaiter = new SemaphoreSlim(1, 1);
+            _newcache = new List<BaseRunner>();
+            batchWaiter = new SemaphoreSlim(0, 1);
         }
 
         public void Evaluate(IList<NeatGenome> genomeList)
         {
-            //batchWaiter.Release();
-            GD.Print($"current count: {batchWaiter.CurrentCount}");
-            for (int i = 0, bsize = (int)BatchSize; i < genomeList.Count; i += bsize, bsize = (int)BatchSize)
+            GD.Print($"Genome count: {genomeList.Count}, Batch size: {BatchSize}");
+            var taskList = new List<Task>();
+            var t = Task.Run(() => { /*System.Threading.Thread.Sleep(500);*/ });
+
+            while (PrepBatch(genomeList))
             {
-                _runnersBatch = PrepBatch(genomeList, i, bsize);
-                batchWaiter.Wait();
-                _testEnv.Runners = _runnersBatch;
-                _testEnv.StartRun();
+                Task.Run(() =>
+                {
+                    var cache = new List<BaseRunner>(_newcache);
+                    int i = listIndex;
+                    GD.Print($"{i} enters semaphore.");
+                    //_testEnv.Runners = cache;
+
+                    //_testEnv.CallDeferred(nameof(GameScene.StartRun), cache);
+
+                    _testEnv.Tree.CreateTimer(0f).Connect("timeout", _testEnv, nameof(GameScene.StartRun), new Godot.Collections.Array() { cache });
+
+                    batchWaiter.Wait();
+
+                    //while (!cont) { System.Threading.Thread.Sleep(500); }
+                }).Wait();
+
+                //_oldcache = new List<BaseRunner>(_newcache);
             }
+            //System.Threading.Thread.Sleep(500);
+            //Task.WaitAll(taskList.ToArray());
+
+            listIndex = 0;
         }
 
         private void OnBatchEnded()
         {
-            _runnersBatch.Clear();
-            batchWaiter.Release();
+            GD.Print($"Last count: {batchWaiter.Release()}");
+            cont = true;
         }
 
-        private List<BaseRunner> PrepBatch(IList<NeatGenome> genomeList, int index, int batchsize)
+        private bool PrepBatch(IList<NeatGenome> genomeList)
         {
-            var res = new List<BaseRunner>();
-            GD.Print($"Number of genomes: {genomeList.Count} Index: {index} Batch size: {batchsize}");
-            var genomebatch = genomeList.ToList().GetRange(index, batchsize);
+            // checks if end of list has been reached
+            if (listIndex >= genomeList.Count) return false;
 
-            foreach (var genome in genomebatch)
+            int batchsize = (int)BatchSize;
+
+            // make a runner for each of the genomes in batch
+            _newcache.Clear();
+            for (int c = 0; listIndex < genomeList.Count && c < batchsize; listIndex++, c++)
             {
-                IBlackBox phenome = _genomeDecoder.Decode(genome);
+                IBlackBox phenome = _genomeDecoder.Decode(genomeList[listIndex]);
                 var runner = Preloads.ANNRunner.Instance() as ANNRunner;
-                runner.Init(genome, phenome);
-                res.Add(runner);
+                runner.Init(genomeList[listIndex], phenome);
+                _newcache.Add(runner);
             }
 
-            GD.Print($"{index}");
-            return res;
+            return true;
         }
 
         public void Reset()

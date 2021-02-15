@@ -43,7 +43,7 @@ namespace A_NEAT_arena.NEAT
 
         public int BatchSize
         {
-            get => _batchSize; 
+            get => _batchSize;
             set
             {
                 if (value < 1) throw new ArgumentOutOfRangeException("Batch size cannot be less than 1.");
@@ -54,9 +54,8 @@ namespace A_NEAT_arena.NEAT
         public NeatController(GameScene env)
         {
             testEnv = env;
-            
-            _speciationStrategy = new ParallelKMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric());
 
+            _speciationStrategy = new ParallelKMeansClusteringStrategy<NeatGenome>(new ManhattanDistanceMetric());
 
             _activationScheme = NetworkActivationScheme.CreateCyclicFixedTimestepsScheme(1);
             _genomeDecoder = new NeatGenomeDecoder(_activationScheme);
@@ -78,38 +77,43 @@ namespace A_NEAT_arena.NEAT
             // instance new NeatEvolutionAlgorithm
             network = new NeatEvolutionAlgorithm<NeatGenome>(_eaParams, _speciationStrategy, new NullComplexityRegulationStrategy());
 
-            // set update scheme and connect update event
-            network.UpdateScheme = new UpdateScheme(1);
-            network.UpdateEvent += OnNetworkUpdate;
-
             // initialize objects needed for the network
             _listEvaluator = new RunnerGenomeListEvaluator(_genomeDecoder, testEnv);
             _listEvaluator.BatchSize = (uint)_batchSize;
-            var genomeList = _genomeFactory.CreateGenomeList(_popSize, 0);
 
-            // initialize network
-            network.Initialize(_listEvaluator, _genomeFactory, genomeList);
-            network.RequestPause();
+
+            // set update scheme and connect update event
+            network.UpdateScheme = new UpdateScheme(1);
+            network.UpdateEvent += OnNetworkUpdate;
         }
 
         private void OnNetworkUpdate(object sender, EventArgs e)
         {
-            GD.Print($"Generation:{network.CurrentGeneration}\n" +
-                $"Max fitness: {network.Statistics._maxFitness}\n" +
-                $"Mean fitness: {network.Statistics._meanFitness}");
+            GD.Print($"Generation:{network.CurrentGeneration}, " +
+                $"Max fitness: {network.Statistics._maxFitness:F0}, " +
+                $"Mean fitness: {network.Statistics._meanFitness:F0}");
 
-            // TODO: set game pausing when generation ends
+            // TODO: set game pausing and stat log when generation ends
         }
 
         #region IGameController implementation
-        public void BeginGame()
+        public async void BeginGame()
         {
-            if(network != null) network.StartContinue();
+            if (network != null)
+            {
+                var genomeList = _genomeFactory.CreateGenomeList(_popSize, 0);
+                // initialize network
+                await Task.Run(() => network.Initialize(_listEvaluator, _genomeFactory, genomeList));
+                network.StartContinue();
+            }
         }
 
         public void Pause()
         {
-            if (network != null) network.RequestPause();
+            if (network != null)
+            {
+                network.RequestPause();
+            }
         }
 
         public void Resume()
@@ -119,12 +123,27 @@ namespace A_NEAT_arena.NEAT
 
         public void OnRoundEnded()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Process()
         {
-            throw new NotImplementedException();
+            if (!testEnv.Tree.Paused && testEnv.Runners.Count > 0)
+            {
+                testEnv.Runners.Sort(GameScene.RunnerComparer);
+
+                try
+                {
+                    var best = testEnv.Runners[0];
+                    testEnv.Camera.Position = new Vector2(best.Position.x - 860, 0);
+                    testEnv.SetScore((int)best.Score);
+                }
+                catch (ObjectDisposedException ex)
+                {
+                    //ex.
+                    /*throw*/;
+                }
+            }
         }
         #endregion
     }
