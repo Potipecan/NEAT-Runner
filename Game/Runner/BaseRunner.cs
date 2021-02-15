@@ -183,6 +183,8 @@ namespace A_NEAT_arena.Game
 
             Score += Position.DistanceTo(oldpos) / 60f + delta;
 
+            if (GlobalPosition.y > 1200) Die(null);
+
             Velocity = newVelocity;
         }
 
