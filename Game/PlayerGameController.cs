@@ -18,27 +18,27 @@ namespace A_NEAT_arena.Game
         #region IGameController implementation
         public void BeginGame()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void OnRoundEnded()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Pause()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Process()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Resume()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
         #endregion
     }

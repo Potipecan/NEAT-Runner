@@ -38,6 +38,7 @@ __meta__ = {
 [node name="Beam" type="Area2D" parent="PlayArea/DeathLaser" groups=[
 "Danger",
 ]]
+collision_layer = 16
 collision_mask = 3
 __meta__ = {
 "_edit_group_": true
@@ -96,7 +97,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StartContinueBtn" type="Button" parent="MainCamera/SettingsHUD/ButtonPanel"]
+[node name="QuitButton" type="Button" parent="MainCamera/SettingsHUD/ButtonPanel"]
 anchor_right = 0.208
 anchor_bottom = 0.167
 margin_left = 24.0
@@ -105,12 +106,19 @@ margin_right = 128.064
 margin_bottom = 87.936
 text = "Quit"
 
-[node name="QuitButton" type="Button" parent="MainCamera/SettingsHUD/ButtonPanel"]
+[node name="StartButton" type="Button" parent="MainCamera/SettingsHUD/ButtonPanel"]
 margin_left = 24.0
 margin_top = 24.0
 margin_right = 168.0
 margin_bottom = 64.0
 text = "Start"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WarningPopup" type="AcceptDialog" parent="MainCamera/SettingsHUD"]
+margin_right = 40.0
+margin_bottom = 40.0
 
 [node name="GameHUD" type="Control" parent="MainCamera"]
 __meta__ = {
@@ -130,5 +138,8 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="body_entered" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="On_Beam_BodyEntered"]
 [connection signal="body_exited" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="OnBeamBodyExited"]
 [connection signal="body_exited" from="PlayArea/RunnerDetector" to="PlayArea" method="OnRunnerDetectorBodyEntered"]
+[connection signal="pressed" from="MainCamera/SettingsHUD/ButtonPanel/QuitButton" to="." method="On_QuitButton_Pressed"]
+[connection signal="pressed" from="MainCamera/SettingsHUD/ButtonPanel/StartButton" to="." method="On_StartButton_Pressed"]
