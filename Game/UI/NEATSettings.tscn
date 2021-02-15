@@ -52,22 +52,22 @@ align = 2
 valign = 1
 autowrap = true
 
-[node name="BatchesSB" type="SpinBox" parent="."]
+[node name="BatchSizeSB" type="SpinBox" parent="."]
 margin_left = 224.0
 margin_top = 168.0
 margin_right = 311.0
 margin_bottom = 192.0
 min_value = 1.0
 max_value = 50.0
-value = 4.0
+value = 50.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="BatchesSB"]
+[node name="Label" type="Label" parent="BatchSizeSB"]
 margin_left = -73.0
 margin_bottom = 24.0
-text = "Batches"
+text = "Batch size"
 align = 2
 valign = 1
 autowrap = true

@@ -10,13 +10,13 @@ namespace A_NEAT_arena.Game
     {
         public event EventHandler ParametersSet;
 
-        private SpinBox SpeciesNumSB, GenSizeSB, BatchesSB;
+        private SpinBox SpeciesNumSB, GenSizeSB, BatchSizeSB;
         private ConfirmationDialog ConfirmDialog;
 
 
         public int SpeciesNum { get => (int)SpeciesNumSB.Value; }
         public int Population { get => (int)GenSizeSB.Value; }
-        public int Batches { get => (int)BatchesSB.Value; }
+        public int BatchSize { get => (int)BatchSizeSB.Value; }
         public NeatEvolutionAlgorithmParameters NeatParams { get; set; }
 
         // Called when the node enters the scene tree for the first time.
@@ -25,7 +25,7 @@ namespace A_NEAT_arena.Game
             base._Ready();
             SpeciesNumSB = GetNode<SpinBox>("SpeciesNumSB");
             GenSizeSB = GetNode<SpinBox>("PopulationSB");
-            BatchesSB = GetNode<SpinBox>("BatchesSB");
+            BatchSizeSB = GetNode<SpinBox>("BatchSizeSB");
             ConfirmDialog = GetNode<ConfirmationDialog>("ConfirmDialog");
 
 
@@ -37,11 +37,11 @@ namespace A_NEAT_arena.Game
 
         private void GetNeatParameters()
         {
-            Task.Run(() =>
+            NeatParams = new NeatEvolutionAlgorithmParameters()
             {
-                NeatParams = new NeatEvolutionAlgorithmParameters();
-                NeatParams.SpecieCount = (int)SpeciesNumSB.Value;
-            }).Wait();
+                SpecieCount = (int)SpeciesNumSB.Value,
+                
+            };
         }
 
         /// <summary>
