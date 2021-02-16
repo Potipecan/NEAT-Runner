@@ -68,7 +68,8 @@ namespace A_NEAT_arena.Game
         {
             _brain = phenome;
             _genome = genome;
-            //pack = set;
+
+            Name = $"Gen_{genome.BirthGeneration}_Specie_{genome.SpecieIdx}_ID_{genome.Id}";
         }
 
         protected override void HandleInput()
