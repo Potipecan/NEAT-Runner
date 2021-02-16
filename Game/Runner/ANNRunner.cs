@@ -57,7 +57,7 @@ namespace A_NEAT_arena.Game
             if (idle) IdleTimer += delta;
             else
             {
-                lastPosition = GlobalPosition;
+                //lastPosition = GlobalPosition;
                 IdleTimer = 0f;
             }
         }
@@ -84,7 +84,7 @@ namespace A_NEAT_arena.Game
             }
             if (Velocity == new Vector2())
             {
-                Eye.Rotation = Mathf.Pi / 2;
+                Eye.Rotation = -Mathf.Pi / 2;
                 return;
             }
             Eye.Rotation = Velocity.Angle();
