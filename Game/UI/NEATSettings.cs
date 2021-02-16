@@ -10,14 +10,27 @@ namespace A_NEAT_arena.Game
     {
         public event EventHandler ParametersSet;
 
-        private SpinBox SpeciesNumSB, GenSizeSB, BatchSizeSB;
+        private SpinBox SpeciesNumSB, GenSizeSB, BatchSizeSB, ElitismSB, SelectionSB, PropagationRatioSB, InterspeciesMatingSB;
         private ConfirmationDialog ConfirmDialog;
 
 
         public int SpeciesNum { get => (int)SpeciesNumSB.Value; }
         public int Population { get => (int)GenSizeSB.Value; }
         public int BatchSize { get => (int)BatchSizeSB.Value; }
-        public NeatEvolutionAlgorithmParameters NeatParams { get; set; }
+        private NeatEvolutionAlgorithmParameters neatParams;
+        public NeatEvolutionAlgorithmParameters NeatParams
+        {
+            get => neatParams; 
+            set
+            {
+                neatParams = value;
+                SpeciesNumSB.Value = neatParams.SpecieCount;
+                ElitismSB.Value = neatParams.ElitismProportion;
+                SelectionSB.Value = neatParams.SelectionProportion;
+                PropagationRatioSB.Value = neatParams.OffspringSexualProportion * 100;
+                InterspeciesMatingSB.Value = neatParams.InterspeciesMatingProportion;
+            }
+        }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -26,13 +39,19 @@ namespace A_NEAT_arena.Game
             SpeciesNumSB = GetNode<SpinBox>("SpeciesNumSB");
             GenSizeSB = GetNode<SpinBox>("PopulationSB");
             BatchSizeSB = GetNode<SpinBox>("BatchSizeSB");
-            ConfirmDialog = GetNode<ConfirmationDialog>("ConfirmDialog");
+            ElitismSB = GetNode<SpinBox>("ElitismSB");
+            SelectionSB = GetNode<SpinBox>("SelectionSB");
+            PropagationRatioSB = GetNode<SpinBox>("PropagationRatioSB");
+            InterspeciesMatingSB = GetNode<SpinBox>("InterspeciesMatingSB");
 
+            ConfirmDialog = GetNode<ConfirmationDialog>("ConfirmDialog");
 
             GetNode<Button>("SetParamsButton").Connect("pressed", this, nameof(On_SetParamsButton_Pressed));
             ConfirmDialog.Connect("confirmed", this, nameof(On_ConfirmDialog_Confirmed));
 
-            GD.Print($"Species num: {SpeciesNum}");
+            NeatParams = new NeatEvolutionAlgorithmParameters();
+
+            //GD.Print($"Species num: {SpeciesNum}");
         }
 
         private void GetNeatParameters()
@@ -40,7 +59,11 @@ namespace A_NEAT_arena.Game
             NeatParams = new NeatEvolutionAlgorithmParameters()
             {
                 SpecieCount = (int)SpeciesNumSB.Value,
-                
+                SelectionProportion = SelectionSB.Value,
+                ElitismProportion = ElitismSB.Value,
+                OffspringSexualProportion = PropagationRatioSB.Value / 100,
+                OffspringAsexualProportion = 1 - PropagationRatioSB.Value / 100,
+                InterspeciesMatingProportion = InterspeciesMatingSB.Value
             };
         }
 
