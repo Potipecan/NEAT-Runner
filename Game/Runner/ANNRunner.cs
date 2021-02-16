@@ -12,6 +12,9 @@ namespace A_NEAT_arena.Game
 {
     public class ANNRunner : BaseRunner
     {
+        public static int InputCount { get; } = 19;
+        public static int OutputCount { get; } = 2;
+
         private IBlackBox _brain;
         private NeatGenome _genome;
         private List<RayCast2D> Rays;
@@ -72,6 +75,7 @@ namespace A_NEAT_arena.Game
         {
             int c = 0;
 
+            // Inputs 1 - 16: ray distances and collider types
             foreach (var r in Rays)
             {
                 // get distance to colliding object
@@ -117,10 +121,13 @@ namespace A_NEAT_arena.Game
                 c++;
             }
 
-            _brain.InputSignalArray[c] = Position.x;
-            _brain.InputSignalArray[c + 1] = Position.y;
+            _brain.InputSignalArray[c] = Velocity.x; // Input 17: horizontal velocity
+            c++;
+            _brain.InputSignalArray[c] = Velocity.y; // Input 18: vertical velocity
+            c++;
+            _brain.InputSignalArray[c] = GlobalPosition.x - PlayArea.LaserPosition; // Input 19: distance to laser
 
-            // process inputs
+            // ANN activation
             _brain.Activate();
 
             // process outputs
