@@ -155,11 +155,10 @@ namespace A_NEAT_arena.Game
             for (int i = 0; i < collNum; i++)
             {
                 var collider = GetSlideCollision(i).Collider as Node2D;
-                var groups = collider.GetGroups();
 
-                if (groups.Contains("Environment")) continue;
+                if (collider.IsInGroup("Environment")) continue;
 
-                if (groups.Contains("Danger"))
+                if (collider.IsInGroup("Danger"))
                 {
                     Die(CauseOfDeath.Saw);
                 }
