@@ -53,6 +53,7 @@ namespace A_NEAT_arena.Game
         }
         protected Vector2 Velocity;
         protected RunnerState State;
+        protected bool idle;
 
         protected List<Coin> PickedUpCoins;
         protected List<Flag> TouchedFlags;
@@ -160,7 +161,7 @@ namespace A_NEAT_arena.Game
 
                 if (groups.Contains("Danger"))
                 {
-                    Die(collider);
+                    Die(CauseOfDeath.Saw);
                 }
             }
 
@@ -181,17 +182,22 @@ namespace A_NEAT_arena.Game
                 State = RunnerState.Neutral;
             }
 
-            Score += Position.DistanceTo(oldpos) / 60f + delta;
-
-            if (GlobalPosition.y > 1200) Die(null);
-
             Velocity = newVelocity;
+            idle = Velocity.Length() < 10f;
+
+            float dist = Position.DistanceTo(oldpos);
+            //idle = dist / delta < 0.2f;
+            Score += dist / 60f + delta;
+
+            if (GlobalPosition.y > 1200) Die(CauseOfDeath.Void);
+
+
         }
 
         #region functions to override
         protected abstract void HandleInput();
 
-        public virtual void Die(Node2D cause)
+        public virtual void Die(CauseOfDeath cause)
         {
             DiedEvent?.Invoke(this);
         }
@@ -224,6 +230,14 @@ namespace A_NEAT_arena.Game
             OnRightWall = 3,
             OnLeftWall = 4,
             Dead = 5
+        }
+
+        public enum CauseOfDeath
+        {
+            Saw = 0,
+            Laser = 1,
+            Idling = 2,
+            Void = 3
         }
     }
 

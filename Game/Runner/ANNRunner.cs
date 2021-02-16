@@ -23,7 +23,7 @@ namespace A_NEAT_arena.Game
             set
             {
                 idleTimer = value;
-                if (IdleTimer >= idleTimeout) Die(null);
+                if (IdleTimer >= idleTimeout) Die(CauseOfDeath.Idling);
             }
         }
         //private PhenomePack pack;
@@ -34,7 +34,7 @@ namespace A_NEAT_arena.Game
         public ANNRunner() : base()
         {
             Rays = new List<RayCast2D>();
-            idleTimeout = 0.5f;
+            idleTimeout = 2f;
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -53,7 +53,7 @@ namespace A_NEAT_arena.Game
         public override void _PhysicsProcess(float delta)
         {
             base._PhysicsProcess(delta);
-            if (GlobalPosition.IsEqualApprox(lastPosition)) IdleTimer += delta;
+            if (idle) IdleTimer += delta;
             else
             {
                 lastPosition = GlobalPosition;
@@ -93,16 +93,19 @@ namespace A_NEAT_arena.Game
                     switch (groups[0])
                     {
                         case "Environment":
-                            _brain.InputSignalArray[c] = 2f;
+                            _brain.InputSignalArray[c] = 0.2f;
                             break;
                         case "Coins":
-                            _brain.InputSignalArray[c] = 3f;
+                            _brain.InputSignalArray[c] = 0.3f;
                             break;
                         case "Flags":
-                            _brain.InputSignalArray[c] = 4f;
+                            _brain.InputSignalArray[c] = 0.4f;
                             break;
                         case "Danger":
-                            _brain.InputSignalArray[c] = 5f;
+                            _brain.InputSignalArray[c] = 0.5f;
+                            break;
+                        case "Laser":
+                            _brain.InputSignalArray[c] = 0.6f;
                             break;
                         default:
                             _brain.InputSignalArray[c] = 0f;
@@ -112,14 +115,10 @@ namespace A_NEAT_arena.Game
                 else _brain.InputSignalArray[c] = 0f;
                 #endregion
                 c++;
-            };
+            }
 
             _brain.InputSignalArray[c] = Position.x;
             _brain.InputSignalArray[c + 1] = Position.y;
-
-            //string chk = "";
-            //foreach (var s in inputs) { chk += $"{s}, "; }
-            //GD.Print($"{chk}");
 
             // process inputs
             _brain.Activate();
@@ -129,11 +128,26 @@ namespace A_NEAT_arena.Game
             Jump = _brain.OutputSignalArray[1] > 0.5f;
         }
 
-        public override void Die(Node2D cause)
+        public override void Die(CauseOfDeath cause)
         {
-            //pack.Score = Score;
+            switch (cause)
+            {
+                case CauseOfDeath.Saw:
+                    Score -= 200;
+                    break;
+                case CauseOfDeath.Laser:
+                    Score -= 100f;
+                    break;
+                case CauseOfDeath.Idling:
+                    Score -= 1000;
+                    break;
+                case CauseOfDeath.Void:
+                    Score -= 0f;
+                    break;
+            }
+
+
             _genome.EvaluationInfo.SetFitness(Score);
-            //EmitSignal(nameof(Died), this);
             base.Die(cause);
         }
 
@@ -156,5 +170,8 @@ namespace A_NEAT_arena.Game
                 Rays.ForEach(r => r.AddExceptionRid(flag.GetRid()));
             }
         }
+
+
+
     }
 }
