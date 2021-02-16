@@ -12,13 +12,13 @@ namespace A_NEAT_arena.Game
 {
     public class ANNRunner : BaseRunner
     {
-        public static int InputCount { get; } = 19;
+        public static int InputCount { get; } = 17;
         public static int OutputCount { get; } = 2;
 
         private IBlackBox _brain;
         private NeatGenome _genome;
         private List<RayCast2D> Rays;
-        private Vector2 lastPosition;
+        private Node2D Eye;
         private float idleTimer, idleTimeout;
         private float IdleTimer
         {
@@ -43,14 +43,12 @@ namespace A_NEAT_arena.Game
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            Rays.Add(GetNode<RayCast2D>("BRRayCast"));
-            Rays.Add(GetNode<RayCast2D>("MRRayCast"));
-            Rays.Add(GetNode<RayCast2D>("TRRayCast"));
-            Rays.Add(GetNode<RayCast2D>("TMRayCast"));
-            Rays.Add(GetNode<RayCast2D>("TLRayCast"));
-            Rays.Add(GetNode<RayCast2D>("MLRayCast"));
-            Rays.Add(GetNode<RayCast2D>("BLRayCast"));
-            Rays.Add(GetNode<RayCast2D>("BMRayCast"));
+            Eye = GetNode<Node2D>("Eye");
+
+            foreach (var c in Eye.GetChildren())
+            {
+                Rays.Add(c as RayCast2D);
+            }
         }
 
         public override void _PhysicsProcess(float delta)
@@ -72,11 +70,35 @@ namespace A_NEAT_arena.Game
             Name = $"Gen_{genome.BirthGeneration}_Specie_{genome.SpecieIdx}_ID_{genome.Id}";
         }
 
+        private void RotateEye()
+        {
+            if(State == RunnerState.OnLeftWall)
+            {
+                Eye.Rotation = 0f;
+                return;
+            }
+            if(State == RunnerState.OnRightWall)
+            {
+                Eye.Rotation = Mathf.Pi;
+                return;
+            }
+            if (Velocity == new Vector2())
+            {
+                Eye.Rotation = Mathf.Pi / 2;
+                return;
+            }
+            Eye.Rotation = Velocity.Angle();
+        }
+
+        #region inherited overridable functions
         protected override void HandleInput()
         {
+
+            RotateEye();
+
             int c = 0;
 
-            // Inputs 1 - 16: ray distances and collider types
+            // Inputs 1 - 14: ray distances and collider types
             foreach (var r in Rays)
             {
                 // get distance to colliding object
@@ -122,11 +144,11 @@ namespace A_NEAT_arena.Game
                 c++;
             }
 
-            _brain.InputSignalArray[c] = Velocity.x; // Input 17: horizontal velocity
+            _brain.InputSignalArray[c] = Velocity.x; // Input 15: horizontal velocity
             c++;
-            _brain.InputSignalArray[c] = Velocity.y; // Input 18: vertical velocity
+            _brain.InputSignalArray[c] = Velocity.y; // Input 16: vertical velocity
             c++;
-            _brain.InputSignalArray[c] = GlobalPosition.x - PlayArea.LaserPosition; // Input 19: distance to laser
+            _brain.InputSignalArray[c] = GlobalPosition.x - PlayArea.LaserPosition; // Input 17: distance to laser
 
             // ANN activation
             _brain.Activate();
@@ -178,8 +200,6 @@ namespace A_NEAT_arena.Game
                 Rays.ForEach(r => r.AddExceptionRid(flag.GetRid()));
             }
         }
-
-
-
+        #endregion
     }
 }
