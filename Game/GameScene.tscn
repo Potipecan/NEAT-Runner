@@ -29,26 +29,21 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="DeathLaser" type="Sprite" parent="PlayArea"]
-position = Vector2( 50, 0 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Beam" type="Area2D" parent="PlayArea/DeathLaser" groups=[
-"Danger",
+[node name="Beam" type="Area2D" parent="PlayArea" groups=[
+"Laser",
 ]]
+position = Vector2( 50, 0 )
 collision_layer = 16
 collision_mask = 3
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayArea/DeathLaser/Beam"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayArea/Beam"]
 position = Vector2( -50, 540 )
 shape = SubResource( 1 )
 
-[node name="Texture" type="Sprite" parent="PlayArea/DeathLaser/Beam"]
+[node name="Texture" type="Sprite" parent="PlayArea/Beam"]
 position = Vector2( 0, 540 )
 texture = ExtResource( 4 )
 
@@ -138,8 +133,8 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="body_entered" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="On_Beam_BodyEntered"]
-[connection signal="body_exited" from="PlayArea/DeathLaser/Beam" to="PlayArea" method="OnBeamBodyExited"]
+[connection signal="body_entered" from="PlayArea/Beam" to="PlayArea" method="On_Beam_BodyEntered"]
+[connection signal="body_exited" from="PlayArea/Beam" to="PlayArea" method="OnBeamBodyExited"]
 [connection signal="body_exited" from="PlayArea/RunnerDetector" to="PlayArea" method="OnRunnerDetectorBodyEntered"]
 [connection signal="pressed" from="MainCamera/SettingsHUD/ButtonPanel/QuitButton" to="." method="On_QuitButton_Pressed"]
 [connection signal="pressed" from="MainCamera/SettingsHUD/ButtonPanel/StartButton" to="." method="On_StartButton_Pressed"]

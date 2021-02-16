@@ -7,7 +7,7 @@ namespace A_NEAT_arena.Game
     {
         public PlayerRunner() : base() { }
 
-        public override void Die(Node2D cause)
+        public override void Die(CauseOfDeath cause)
         {
             base.Die(cause);
         }

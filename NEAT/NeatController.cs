@@ -138,7 +138,7 @@ namespace A_NEAT_arena.NEAT
                     testEnv.Camera.Position = new Vector2(best.Position.x - 860, 0);
                     testEnv.SetScore((int)best.Score);
                 }
-                catch (ObjectDisposedException ex)
+                catch (ObjectDisposedException)
                 {
                     //ex.
                     /*throw*/;

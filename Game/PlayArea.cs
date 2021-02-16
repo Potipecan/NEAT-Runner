@@ -39,7 +39,7 @@ namespace A_NEAT_arena.Game
         {
             Start = GD.Load<PackedScene>("res://Game/Start.tscn");
             RunnerDetector = GetNode<Area2D>("RunnerDetector");
-            DeathLaser = GetNode<Node2D>("DeathLaser");
+            DeathLaser = GetNode<Node2D>("Beam");
 
             await Reset();
         }
@@ -119,7 +119,6 @@ namespace A_NEAT_arena.Game
             Time = 0f;
 
             Course.ForEach(s => s.QueueFree());
-            System.Threading.Thread.Sleep(200);
 
             Course.Clear();
 
@@ -167,7 +166,7 @@ namespace A_NEAT_arena.Game
 
         private void On_Beam_BodyEntered(Node body)
         {
-            if (body.GetType().IsSubclassOf(typeof(BaseRunner))) (body as BaseRunner).Die(null);
+            if (body.GetType().IsSubclassOf(typeof(BaseRunner))) (body as BaseRunner).Die(BaseRunner.CauseOfDeath.Laser);
         }
 
         private void OnSegmentFreed(Segment sender)
