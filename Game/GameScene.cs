@@ -126,7 +126,7 @@ namespace A_NEAT_arena.Game
 
             Task.Run(async () => await PlayArea.Reset()).Wait();
             Tree.Paused = true;
-            neat.InitializeNetwork(NeatSettings.NeatParams, NeatSettings.Population, NeatSettings.BatchSize);
+            neat.InitializeNetwork(NeatSettings.NeatParams, NeatSettings.Population, NeatSettings.BatchSize, ANNRunner.InputCount, ANNRunner.OutputCount);
         }
 
         private void On_NeatExperiment_GenerationEnded(object sender, EventArgs e)

@@ -7,6 +7,8 @@ namespace A_NEAT_arena.Game
 {
     public class PlayArea : Node2D
     {
+        public static float LaserPosition;
+
         [Signal] public delegate void GameOver();
         public event GameOver GameOverEvent;
 
@@ -49,6 +51,7 @@ namespace A_NEAT_arena.Game
         {
             Time += delta;
             DeathLaser.Position = new Vector2(DeathLaser.Position.x + LaserSpeed * delta, 0);
+            UpdateLaserPosition();
             LaserSpeed += LaserAcc * delta;
         }
 
@@ -76,7 +79,7 @@ namespace A_NEAT_arena.Game
                 spawnedcnt++;
                 runner.DiedEvent += OnRunnerDied;
             }
-            GD.Print($"Runner count: {Runners.Count}, Spawned: {spawnedcnt}");
+            //GD.Print($"Runner count: {Runners.Count}, Spawned: {spawnedcnt}");
 
         }
 
@@ -191,6 +194,11 @@ namespace A_NEAT_arena.Game
                 await Reset();
                 GameOverEvent?.Invoke();
             }
+        }
+
+        private void UpdateLaserPosition()
+        {
+            LaserPosition = DeathLaser.GlobalPosition.x;
         }
     }
 }
