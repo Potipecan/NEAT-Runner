@@ -28,10 +28,9 @@ namespace A_NEAT_arena.NEAT
         private GameScene _testEnv;
         private IGenomeDecoder<NeatGenome, IBlackBox> _genomeDecoder;
         private List<BaseRunner> _runnersBatch;
-        private List<BaseRunner> _oldcache, _newcache;
+        private List<BaseRunner> _newcache;
         private SemaphoreSlim batchWaiter;
         private int listIndex;
-        private bool cont;
 
         public RunnerGenomeListEvaluator(IGenomeDecoder<NeatGenome, IBlackBox> genomeDecoder, GameScene testenv)
         {
@@ -57,29 +56,20 @@ namespace A_NEAT_arena.NEAT
                     var cache = new List<BaseRunner>(_newcache);
                     int i = listIndex;
                     GD.Print($"{i} enters semaphore.");
-                    //_testEnv.Runners = cache;
-
-                    //_testEnv.CallDeferred(nameof(GameScene.StartRun), cache);
 
                     _testEnv.Tree.CreateTimer(0f).Connect("timeout", _testEnv, nameof(GameScene.StartRun), new Godot.Collections.Array() { cache });
 
                     batchWaiter.Wait();
 
-                    //while (!cont) { System.Threading.Thread.Sleep(500); }
                 }).Wait();
 
-                //_oldcache = new List<BaseRunner>(_newcache);
             }
-            //System.Threading.Thread.Sleep(500);
-            //Task.WaitAll(taskList.ToArray());
-
             listIndex = 0;
         }
 
         private void OnBatchEnded()
         {
-            GD.Print($"Last count: {batchWaiter.Release()}");
-            cont = true;
+            batchWaiter.Release();
         }
 
         private bool PrepBatch(IList<NeatGenome> genomeList)
