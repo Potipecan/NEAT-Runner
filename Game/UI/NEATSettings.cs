@@ -3,6 +3,8 @@ using System;
 using SharpNeat.EvolutionAlgorithms;
 using System.Threading.Tasks;
 using SharpNeat.Core;
+using SharpNeat.Genomes.Neat;
+using A_NEAT_arena.NEAT;
 
 namespace A_NEAT_arena.Game
 {
@@ -10,25 +12,48 @@ namespace A_NEAT_arena.Game
     {
         public event EventHandler ParametersSet;
 
-        private SpinBox SpeciesNumSB, GenSizeSB, BatchSizeSB, ElitismSB, SelectionSB, PropagationRatioSB, InterspeciesMatingSB;
+        // Experiment control inputs
+        private SpinBox SpeciesNumSB, GenSizeSB, BatchSizeSB;
+        // Reproduction settings inputs
+        private SpinBox ElitismSB, SelectionSB, PropagationRatioSB, InterspeciesMatingSB;
+        // Genome settings inputs
+        private SpinBox NodeMutation, AddConn, DeleteConn, ConnWeight, InitialConnProportion;
+
+
         private ConfirmationDialog ConfirmDialog;
 
 
         public int SpeciesNum { get => (int)SpeciesNumSB.Value; }
         public int Population { get => (int)GenSizeSB.Value; }
         public int BatchSize { get => (int)BatchSizeSB.Value; }
+
         private NeatEvolutionAlgorithmParameters neatParams;
         public NeatEvolutionAlgorithmParameters NeatParams
         {
-            get => neatParams; 
+            get => neatParams;
             set
             {
                 neatParams = value;
                 SpeciesNumSB.Value = neatParams.SpecieCount;
-                ElitismSB.Value = neatParams.ElitismProportion;
-                SelectionSB.Value = neatParams.SelectionProportion;
+                ElitismSB.Value = neatParams.ElitismProportion * 100;
+                SelectionSB.Value = neatParams.SelectionProportion * 100;
                 PropagationRatioSB.Value = neatParams.OffspringSexualProportion * 100;
                 InterspeciesMatingSB.Value = neatParams.InterspeciesMatingProportion;
+            }
+        }
+
+        private NeatGenomeParameters genomeParams;
+        public NeatGenomeParameters GenomeParams
+        {
+            get => genomeParams;
+            set
+            {
+                genomeParams = value;
+                NodeMutation.Value = genomeParams.AddNodeMutationProbability * 100.0;
+                AddConn.Value = genomeParams.AddConnectionMutationProbability * 100.0;
+                DeleteConn.Value = genomeParams.DeleteConnectionMutationProbability * 100.0;
+                ConnWeight.Value = genomeParams.ConnectionWeightMutationProbability * 100.0;
+                InitialConnProportion.Value = genomeParams.InitialInterconnectionsProportion * 100.0;
             }
         }
 
@@ -36,13 +61,20 @@ namespace A_NEAT_arena.Game
         public override void _Ready()
         {
             base._Ready();
-            SpeciesNumSB = GetNode<SpinBox>("SpeciesNumSB");
-            GenSizeSB = GetNode<SpinBox>("PopulationSB");
-            BatchSizeSB = GetNode<SpinBox>("BatchSizeSB");
-            ElitismSB = GetNode<SpinBox>("ElitismSB");
-            SelectionSB = GetNode<SpinBox>("SelectionSB");
-            PropagationRatioSB = GetNode<SpinBox>("PropagationRatioSB");
-            InterspeciesMatingSB = GetNode<SpinBox>("InterspeciesMatingSB");
+            SpeciesNumSB = GetNode<SpinBox>("ControlSettings/SpeciesNumSB");
+            GenSizeSB = GetNode<SpinBox>("ControlSettings/PopulationSB");
+            BatchSizeSB = GetNode<SpinBox>("ControlSettings/BatchSizeSB");
+
+            ElitismSB = GetNode<SpinBox>("Reproduction/ElitismSB");
+            SelectionSB = GetNode<SpinBox>("Reproduction/SelectionSB");
+            PropagationRatioSB = GetNode<SpinBox>("Reproduction/PropagationRatioSB");
+            InterspeciesMatingSB = GetNode<SpinBox>("Reproduction/InterspeciesMatingSB");
+
+            NodeMutation = GetNode<SpinBox>("Genome/AddNode");
+            AddConn = GetNode<SpinBox>("Genome/AddConn");
+            DeleteConn = GetNode<SpinBox>("Genome/RemoveConn");
+            ConnWeight = GetNode<SpinBox>("Genome/Weight");
+            InitialConnProportion = GetNode<SpinBox>("Genome/Initial");
 
             ConfirmDialog = GetNode<ConfirmationDialog>("ConfirmDialog");
 
@@ -50,20 +82,53 @@ namespace A_NEAT_arena.Game
             ConfirmDialog.Connect("confirmed", this, nameof(On_ConfirmDialog_Confirmed));
 
             NeatParams = new NeatEvolutionAlgorithmParameters();
-
-            //GD.Print($"Species num: {SpeciesNum}");
+            GenomeParams = new NeatGenomeParameters();
         }
 
+        public BundledExperimentSettings GetBundledExperimetSettings()
+        {
+            //GetNeatParameters();
+            //GetGenomeParameters();
+            return new BundledExperimentSettings(Population, BatchSize, NeatParams, GenomeParams);
+        }
+
+        /// <summary>
+        /// Sets NEAT evolution parameters
+        /// </summary>
         private void GetNeatParameters()
         {
             NeatParams = new NeatEvolutionAlgorithmParameters()
             {
                 SpecieCount = (int)SpeciesNumSB.Value,
-                SelectionProportion = SelectionSB.Value,
-                ElitismProportion = ElitismSB.Value,
-                OffspringSexualProportion = PropagationRatioSB.Value / 100,
-                OffspringAsexualProportion = 1 - PropagationRatioSB.Value / 100,
+                SelectionProportion = SelectionSB.Value / 100.0,
+                ElitismProportion = ElitismSB.Value / 100.0,
+                OffspringSexualProportion = PropagationRatioSB.Value / 100.0,
+                OffspringAsexualProportion = 1 - PropagationRatioSB.Value / 100.0,
                 InterspeciesMatingProportion = InterspeciesMatingSB.Value
+            };
+        }
+
+        /// <summary>
+        /// Sets the genome parameters according to input values
+        /// </summary>
+        private void GetGenomeParameters()
+        {
+            // normalize mutation chances
+            var reduction = (NodeMutation.Value + AddConn.Value + DeleteConn.Value + ConnWeight.Value + genomeParams.NodeAuxStateMutationProbability * 100.0) / 100.0;
+            NodeMutation.Value /= reduction;
+            AddConn.Value /= reduction;
+            DeleteConn.Value /= reduction;
+            ConnWeight.Value /= reduction;
+            GenomeParams.NodeAuxStateMutationProbability /= reduction;
+
+            GenomeParams = new NeatGenomeParameters()
+            {
+                InitialInterconnectionsProportion = InitialConnProportion.Value / 100.0,
+                AddConnectionMutationProbability = AddConn.Value / 100.0,
+                DeleteConnectionMutationProbability = DeleteConn.Value / 100.0,
+                ConnectionWeightMutationProbability = ConnWeight.Value / 100.0,
+                AddNodeMutationProbability = NodeMutation.Value / 100.0,
+                NodeAuxStateMutationProbability = GenomeParams.NodeAuxStateMutationProbability
             };
         }
 
@@ -72,8 +137,8 @@ namespace A_NEAT_arena.Game
         /// </summary>
         private void On_SetParamsButton_Pressed()
         {
-            if (NeatParams != null) ConfirmDialog.PopupCentered();
-            else On_ConfirmDialog_Confirmed();
+            //if (NeatParams != null) ConfirmDialog.PopupCentered();
+            On_ConfirmDialog_Confirmed();
         }
 
         /// <summary>
@@ -81,10 +146,9 @@ namespace A_NEAT_arena.Game
         /// </summary>
         private void On_ConfirmDialog_Confirmed()
         {
-            GD.Print("1");
             GetNeatParameters();
+            GetGenomeParameters();
             ParametersSet?.Invoke(this, new EventArgs());
         }
     }
-
 }
