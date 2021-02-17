@@ -67,26 +67,26 @@ __meta__ = {
 }
 
 [node name="NEATSettings" parent="MainCamera/SettingsHUD" instance=ExtResource( 6 )]
-margin_left = 448.0
-margin_top = 64.0
-margin_right = 782.0
-margin_bottom = 782.0
+margin_left = 512.0
+margin_top = 128.0
+margin_right = 1152.0
+margin_bottom = 616.0
 
 [node name="SetupOptions" parent="MainCamera/SettingsHUD" instance=ExtResource( 3 )]
-margin_left = 64.0
-margin_top = 64.0
-margin_right = 399.0
-margin_bottom = 923.0
+margin_left = 128.0
+margin_top = 128.0
+margin_right = 463.0
+margin_bottom = 987.0
 
 [node name="ButtonPanel" type="ColorRect" parent="MainCamera/SettingsHUD"]
 anchor_left = 0.102
 anchor_top = 0.015
 anchor_right = 0.112
 anchor_bottom = 0.037
-margin_left = 636.16
-margin_top = 47.8
-margin_right = 808.96
-margin_bottom = 216.04
+margin_left = 1004.16
+margin_top = 111.8
+margin_right = 1176.96
+margin_bottom = 280.04
 color = Color( 0.439216, 0.439216, 0.439216, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
