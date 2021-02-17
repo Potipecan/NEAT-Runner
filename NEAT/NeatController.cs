@@ -14,6 +14,7 @@ using SharpNeat.DistanceMetrics;
 using SharpNeat.SpeciationStrategies;
 using A_NEAT_arena.Game;
 using Godot;
+//using Godot.Collections;
 
 namespace A_NEAT_arena.NEAT
 {
@@ -21,14 +22,8 @@ namespace A_NEAT_arena.NEAT
     {
         private NeatEvolutionAlgorithmParameters _eaParams;
         private NeatGenomeParameters _neatGenomeParameters;
-        private string _name;
         private int _popSize;
-        private int _specieCount;
         private NetworkActivationScheme _activationScheme;
-        private string _complexityRegulationStr;
-        private int? _complexityTreshold;
-        private string _description;
-        private ParallelOptions _parallelOptions;
         private int _batchSize;
 
         private GameScene testEnv;
@@ -36,6 +31,12 @@ namespace A_NEAT_arena.NEAT
         private IGenomeDecoder<NeatGenome, IBlackBox> _genomeDecoder;
         private ISpeciationStrategy<NeatGenome> _speciationStrategy;
         private RunnerGenomeListEvaluator _listEvaluator;
+
+        #region Public properties
+        public int Batch { get => _listEvaluator.Batch; }
+        #endregion
+
+        private Godot.Collections.Dictionary<string, Godot.Collections.Dictionary<string, float>> ResultSet;
 
         private NeatEvolutionAlgorithm<NeatGenome> network;
 
@@ -62,20 +63,22 @@ namespace A_NEAT_arena.NEAT
 
         }
 
+        #region NEAT stuff
         /// <summary>
         /// Initializes the NEAT evolution algorithm
         /// </summary>
         /// <param name="eaparams">User evoution algorithm parameters</param>
-        public void InitializeNetwork(NeatEvolutionAlgorithmParameters eaparams, int pop, int batchSize, int inputs = 18, int outputs = 2)
+        public void InitializeNetwork(BundledExperimentSettings settings, int inputs = 18, int outputs = 2)
         {
-            _eaParams = eaparams;
-            BatchSize = batchSize;
+            _eaParams = settings.EAParams;
+            BatchSize = settings.BatchSize;
 
-            _popSize = pop;
-            _genomeFactory = new NeatGenomeFactory(inputs, outputs);
+            _popSize = settings.Population;
+            _genomeFactory = new NeatGenomeFactory(inputs, outputs, settings.GenomeParams);
 
             // instance new NeatEvolutionAlgorithm
-            network = new NeatEvolutionAlgorithm<NeatGenome>(_eaParams, _speciationStrategy, new NullComplexityRegulationStrategy());
+            var complexityReg = new DefaultComplexityRegulationStrategy(ComplexityCeilingType.Absolute, (inputs + outputs) * 3);
+            network = new NeatEvolutionAlgorithm<NeatGenome>(_eaParams, _speciationStrategy, complexityReg);
 
             // initialize objects needed for the network
             _listEvaluator = new RunnerGenomeListEvaluator(_genomeDecoder, testEnv);
@@ -86,14 +89,18 @@ namespace A_NEAT_arena.NEAT
             network.UpdateScheme = new UpdateScheme(1);
             network.UpdateEvent += OnNetworkUpdate;
         }
+        #endregion
 
         private void OnNetworkUpdate(object sender, EventArgs e)
         {
-            GD.Print($"Generation:{network.CurrentGeneration}, " +
+            GD.Print($"Generation: {network.CurrentGeneration}, " +
                 $"Max fitness: {network.Statistics._maxFitness:F0}, " +
-                $"Mean fitness: {network.Statistics._meanFitness:F0}");
+                $"Mean fitness: {network.Statistics._meanFitness:F0}, " +
+                $"Max complexity: {network.Statistics._maxComplexity:F2}, " +
+                $"Mean complexity: {network.Statistics._meanComplexity:F2}");
 
             // TODO: set game pausing and stat log when generation ends
+            AddResultSet(network.Statistics);
         }
 
         #region IGameController implementation
@@ -146,5 +153,27 @@ namespace A_NEAT_arena.NEAT
             }
         }
         #endregion
+
+        private void ExportToJSON()
+        {
+            string res = JSON.Print(ResultSet);
+        }
+
+        private void AddResultSet(NeatAlgorithmStats stats)
+        {
+            var set = new Godot.Collections.Dictionary<string, float>
+            {
+                ["max_fitness"] = (float)stats._maxFitness,
+                ["mean_fitness"] = (float)stats._meanFitness,
+                ["max_complexity"] = (float)stats._maxComplexity,
+                ["mean_complexitiy"] = (float)stats._meanComplexity,
+                ["sexual_offspring_count"] = stats._sexualOffspringCount,
+                ["asexual_offspring_count"] = stats._asexualOffspringCount
+            };
+
+            ResultSet[$"{stats._generation}"] = set;
+
+            //JSON.Print(ResultSet)
+        }
     }
 }
