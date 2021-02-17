@@ -7,6 +7,8 @@ namespace A_NEAT_arena.Game
     [Tool]
     public class Flag : Area2D
     {
+        public static readonly float Value = 1000;
+
         private List<BaseRunner> TouchedRunners;
 
         public Flag() : base()
