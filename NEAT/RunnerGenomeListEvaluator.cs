@@ -25,6 +25,9 @@ namespace A_NEAT_arena.NEAT
         private uint batchSize;
         public uint BatchSize { get => batchSize; set { batchSize = value; } }
 
+        private int batch;
+        public int Batch { get => batch; }
+
         private GameScene _testEnv;
         private IGenomeDecoder<NeatGenome, IBlackBox> _genomeDecoder;
         private List<BaseRunner> _runnersBatch;
@@ -45,17 +48,19 @@ namespace A_NEAT_arena.NEAT
 
         public void Evaluate(IList<NeatGenome> genomeList)
         {
-            GD.Print($"Genome count: {genomeList.Count}, Batch size: {BatchSize}");
+            //GD.Print($"Genome count: {genomeList.Count}, Batch size: {BatchSize}");
             var taskList = new List<Task>();
-            var t = Task.Run(() => { /*System.Threading.Thread.Sleep(500);*/ });
+            batch = 1;
+            //var t = Task.Run(() => { /*System.Threading.Thread.Sleep(500);*/ });
 
             while (PrepBatch(genomeList))
             {
+                batch++;
                 Task.Run(() =>
                 {
                     var cache = new List<BaseRunner>(_newcache);
                     int i = listIndex;
-                    GD.Print($"{i} enters semaphore.");
+                    //GD.Print($"{i} enters semaphore.");
 
                     _testEnv.Tree.CreateTimer(0f).Connect("timeout", _testEnv, nameof(GameScene.StartRun), new Godot.Collections.Array() { cache });
 
@@ -69,8 +74,16 @@ namespace A_NEAT_arena.NEAT
 
         private void OnBatchEnded()
         {
-            batchWaiter.Release();
-        }
+            do
+            {
+                if (batchWaiter.CurrentCount < 1)
+                {
+                    batchWaiter.Release();
+                    break;
+                }
+                else System.Threading.Thread.Sleep(500);
+
+            } while (batchWaiter.CurrentCount > 0);        }
 
         private bool PrepBatch(IList<NeatGenome> genomeList)
         {
