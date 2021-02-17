@@ -14,49 +14,42 @@ texture = ExtResource( 3 )
 offset = Vector2( 4, 0 )
 
 [node name="Ray1" type="RayCast2D" parent="Eye" index="0"]
-enabled = true
 cast_to = Vector2( 1920, 0 )
 collision_mask = 30
 collide_with_areas = true
 
 [node name="Ray2" type="RayCast2D" parent="Eye" index="1"]
 rotation = 1.5708
-enabled = true
 cast_to = Vector2( 1920, 0 )
 collision_mask = 30
 collide_with_areas = true
 
 [node name="Ray3" type="RayCast2D" parent="Eye" index="2"]
 rotation = -1.5708
-enabled = true
 cast_to = Vector2( 1920, 0 )
 collision_mask = 30
 collide_with_areas = true
 
 [node name="Ray4" type="RayCast2D" parent="Eye" index="3"]
 rotation = -0.523599
-enabled = true
 cast_to = Vector2( 1920, 0 )
 collision_mask = 30
 collide_with_areas = true
 
 [node name="Ray5" type="RayCast2D" parent="Eye" index="4"]
 rotation = -1.0472
-enabled = true
 cast_to = Vector2( 1920, 0 )
 collision_mask = 30
 collide_with_areas = true
 
 [node name="Ray6" type="RayCast2D" parent="Eye" index="5"]
 rotation = 0.523599
-enabled = true
 cast_to = Vector2( 1920, 0 )
 collision_mask = 30
 collide_with_areas = true
 
 [node name="Ray7" type="RayCast2D" parent="Eye" index="6"]
 rotation = 1.0472
-enabled = true
 cast_to = Vector2( 1920, 0 )
 collision_mask = 30
 collide_with_areas = true

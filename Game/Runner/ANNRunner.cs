@@ -12,8 +12,11 @@ namespace A_NEAT_arena.Game
 {
     public class ANNRunner : BaseRunner
     {
-        public static int InputCount { get; } = 17;
+        public static int InputCount { get; } = 18;
         public static int OutputCount { get; } = 2;
+
+        private delegate void TriggerRaycastUpdate();
+        private event TriggerRaycastUpdate RaycastUpdate;
 
         private IBlackBox _brain;
         private NeatGenome _genome;
@@ -38,6 +41,7 @@ namespace A_NEAT_arena.Game
         {
             Rays = new List<RayCast2D>();
             idleTimeout = 2f;
+            Score = -1000f;
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -45,9 +49,11 @@ namespace A_NEAT_arena.Game
         {
             Eye = GetNode<Node2D>("Eye");
 
-            foreach (var c in Eye.GetChildren())
+            foreach (RayCast2D c in Eye.GetChildren())
             {
-                Rays.Add(c as RayCast2D);
+                Rays.Add(c);
+                RaycastUpdate += c.ForceRaycastUpdate;
+                RaycastUpdate += c.ForceUpdateTransform;
             }
         }
 
@@ -77,17 +83,18 @@ namespace A_NEAT_arena.Game
                 Eye.Rotation = 0f;
                 return;
             }
-            if(State == RunnerState.OnRightWall)
+            else if(State == RunnerState.OnRightWall)
             {
                 Eye.Rotation = Mathf.Pi;
                 return;
             }
-            if (Velocity == new Vector2())
+            else if (Velocity == new Vector2())
             {
                 Eye.Rotation = -Mathf.Pi / 2;
                 return;
             }
-            Eye.Rotation = Velocity.Angle();
+            else Eye.Rotation = Velocity.Angle();
+            RaycastUpdate?.Invoke();
         }
 
         #region inherited overridable functions
@@ -149,6 +156,8 @@ namespace A_NEAT_arena.Game
             _brain.InputSignalArray[c] = Velocity.y; // Input 16: vertical velocity
             c++;
             _brain.InputSignalArray[c] = GlobalPosition.x - PlayArea.LaserPosition; // Input 17: distance to laser
+            c++;
+            _brain.InputSignalArray[c] = (int)State; // Input 18: runner state
 
             // ANN activation
             _brain.Activate();
@@ -163,13 +172,13 @@ namespace A_NEAT_arena.Game
             switch (cause)
             {
                 case CauseOfDeath.Saw:
-                    Score -= 200;
+                    Score += 50;
                     break;
                 case CauseOfDeath.Laser:
-                    Score -= 100f;
+                    Score += 100f;
                     break;
                 case CauseOfDeath.Idling:
-                    Score -= 1000;
+                    Score += 10;
                     break;
                 case CauseOfDeath.Void:
                     Score -= 0f;

@@ -186,7 +186,7 @@ namespace A_NEAT_arena.Game
 
             float dist = Position.DistanceTo(oldpos);
             //idle = dist / delta < 0.2f;
-            Score += dist / 60f + delta;
+            Score += dist /*/ 60f*/ + delta * 10;
 
             if (GlobalPosition.y > 1200) Die(CauseOfDeath.Void);
 
@@ -199,13 +199,14 @@ namespace A_NEAT_arena.Game
         public virtual void Die(CauseOfDeath cause)
         {
             DiedEvent?.Invoke(this);
+            QueueFree();
         }
 
         public virtual void PickupCoin(Coin coin)
         {
             if (!PickedUpCoins.Contains(coin))
             {
-                Score += 100;
+                Score += Coin.Value;
                 PickedUpCoins.Add(coin);
                 coin.QueueFree();
             }
@@ -215,7 +216,7 @@ namespace A_NEAT_arena.Game
         {
             if (!TouchedFlags.Contains(flag))
             {
-                Score += 1000;
+                Score += Flag.Value;
                 TouchedFlags.Add(flag);
             }
         }
