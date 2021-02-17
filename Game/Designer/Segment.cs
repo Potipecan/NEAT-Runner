@@ -12,7 +12,7 @@ namespace A_NEAT_arena.Game
 
         [Export] public Rect2 UsedRect;
         [Export] public Dictionary<int, Array<Vector2>> Plan;
-        public Flag Flag;
+        [Export] public Flag Flag;
         [Export] string FlagName;
 
         public bool IsObsolete { get; set; }
@@ -27,7 +27,7 @@ namespace A_NEAT_arena.Game
         public override void _Ready()
         {
             base._Ready();
-            Flag = GetNode<Flag>(FlagName);
+            if (Flag == null) Flag = GetNode<Flag>(FlagName);
         }
 
         public void Build(string lvlName, Dictionary<int, Array<Vector2>> plan)
@@ -125,18 +125,20 @@ namespace A_NEAT_arena.Game
                         //GD.Print("Check 5 4");
                         try
                         {
-                            Vector2 tile = plan[4][0];
+                            foreach (Vector2 tile in plan[4])
+                            {
 
-                            Node2D flag = (Node2D)Preloads.Flag.Instance();
+                                Node2D flag = (Node2D)Preloads.Flag.Instance();
 
-                            flag.Name = $"Flag_{tile.x}_{tile.y}";
-                            flag.Position = tile * 60f;
-                            //GD.Print($"{flag.Name} {flag.Position}");
+                                flag.Name = $"Flag_{tile.x}_{tile.y}";
+                                flag.Position = tile * 60f;
+                                //GD.Print($"{flag.Name} {flag.Position}");
 
-                            AddChild(flag);
-                            flag.Owner = this;
-                            FlagName = flag.Name;
-                            UsedRect = UsedRect.Expand(tile);
+                                AddChild(flag);
+                                flag.Owner = this;
+                                if (Flag == null) Flag = flag as Flag;
+                                UsedRect = UsedRect.Expand(tile);
+                            }
                         }
                         catch (Exception ex)
                         {

@@ -46,11 +46,11 @@ namespace A_NEAT_arena.Game
             {
                 plan[GetCell((int)tile.x, (int)tile.y)].Add(tile);
             }
-            if(plan[4].Count != 1)
-            {
-                GD.Print("Level must have exactly one flag.");
-                return;
-            }
+            //if(plan[4].Count != 1)
+            //{
+            //    GD.Print("Level must have exactly one flag.");
+            //    return;
+            //}
 
             var seg = Preloads.Segment.Instance() as Segment;
             seg.Build(FileName, plan);
