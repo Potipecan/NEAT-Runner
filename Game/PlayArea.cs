@@ -185,7 +185,7 @@ namespace A_NEAT_arena.Game
             }
 
             Runners.Remove(runner);
-            runner.QueueFree();
+            //runner.QueueFree();
 
             if (Runners.Count < 1)
             {
