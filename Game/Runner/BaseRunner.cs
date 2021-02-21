@@ -69,6 +69,10 @@ namespace A_NEAT_arena.Game
             IsDead = false;
         }
 
+        public override void _Ready()
+        {
+        }
+
         protected void WallJump()
         {
             if (Jump)
@@ -184,14 +188,15 @@ namespace A_NEAT_arena.Game
             Velocity = newVelocity;
             idle = Velocity.Length() < 10f;
 
-            float dist = Position.DistanceTo(oldpos);
-            //idle = dist / delta < 0.2f;
-            Score += dist /*/ 60f*/ + delta * 10;
+            Score += delta * 10;
 
             if (GlobalPosition.y > 1200) Die(CauseOfDeath.Void);
 
 
         }
+
+
+
 
         #region functions to override
         protected abstract void HandleInput();
@@ -237,7 +242,8 @@ namespace A_NEAT_arena.Game
             Saw = 0,
             Laser = 1,
             Idling = 2,
-            Void = 3
+            Void = 3,
+            Timeout = 4
         }
     }
 

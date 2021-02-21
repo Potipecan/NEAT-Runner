@@ -15,6 +15,7 @@ namespace A_NEAT_arena.Game
         public event Start StartEvent;
 
         private ItemList SegmentList;
+        private CheckButton RandomSeed;
         private FileDialog SegmentLoader;
         private Button RandomizeButton;
         private SpinBox SeedBox;
@@ -24,13 +25,12 @@ namespace A_NEAT_arena.Game
 
         private List<string> SegmentPaths;
 
-        private bool isSeedRandom;
         private bool IsSeedRandom
         {
-            get => isSeedRandom;
+            get => RandomSeed.Pressed;
             set
             {
-                isSeedRandom = value;
+                RandomSeed.Pressed = value;
                 SeedBox.Editable = !value;
                 RandomizeButton.Disabled = value;
             }
@@ -61,7 +61,6 @@ namespace A_NEAT_arena.Game
         {
             LoadedSegments = new List<PackedScene>();
             SegmentPaths = new List<string>();
-            isSeedRandom = false;
             SeedGen = new RandomNumberGenerator();
             SeedGen.Seed = (ulong)DateTime.Now.Ticks;
         }
@@ -70,6 +69,7 @@ namespace A_NEAT_arena.Game
         {
             base._Ready();
 
+            RandomSeed = GetNode<CheckButton>("RandomSeedCheck");
             SegmentList = GetNode<ItemList>("LoadedSegments");
             SegmentLoader = GetNode<FileDialog>("SegmentLoader");
             SeedBox = GetNode<SpinBox>("SeedInput");

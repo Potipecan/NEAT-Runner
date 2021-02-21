@@ -2,6 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace A_NEAT_arena.Game
 {
@@ -11,6 +12,11 @@ namespace A_NEAT_arena.Game
 
         [Signal] public delegate void GameOver();
         public event GameOver GameOverEvent;
+
+        [Export] public float Timeout { get; set; }
+
+        private delegate void KillSignal(BaseRunner.CauseOfDeath cod);
+        private event KillSignal KillAllRunners;
 
         public List<BaseRunner> Runners { get; set; }
         public List<PackedScene> CourseSegments { get; set; }
@@ -23,9 +29,13 @@ namespace A_NEAT_arena.Game
         private PackedScene Start;
         private RandomNumberGenerator Gen;
         private bool IsReset;
+        private CourseGenerationStatus GenStatus;
+
+        private SemaphoreSlim RunnerDeletionManager;
 
         private Area2D RunnerDetector;
         private Node2D DeathLaser;
+        private Godot.Timer BatchTimer;
 
         public PlayArea() : base()
         {
@@ -34,6 +44,8 @@ namespace A_NEAT_arena.Game
             Course = new List<Segment>();
             CourseSegments = new List<PackedScene>();
             IsReset = false;
+            GenStatus = CourseGenerationStatus.Free;
+            RunnerDeletionManager = new SemaphoreSlim(1, 1);
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -42,6 +54,7 @@ namespace A_NEAT_arena.Game
             Start = GD.Load<PackedScene>("res://Game/Start.tscn");
             RunnerDetector = GetNode<Area2D>("RunnerDetector");
             DeathLaser = GetNode<Node2D>("Beam");
+            BatchTimer = GetNode<Godot.Timer>("BatchTimer");
 
             await Reset();
         }
@@ -69,11 +82,14 @@ namespace A_NEAT_arena.Game
             await Reset();
             await GenerateCourse(2);
 
+            BatchTimer.Start();
+
             var pos = Course[0].Flag.Position + new Vector2(30, 30);
             int spawnedcnt = 0;
             foreach (var runner in Runners)
             {
                 runner.Position = pos;
+                KillAllRunners += runner.Die;
                 CallDeferred("add_child", runner);
                 await ToSignal(runner, "ready");
                 spawnedcnt++;
@@ -90,12 +106,13 @@ namespace A_NEAT_arena.Game
         /// <exception cref="System.Exception">Thrown when <c>CourseSegments</c> is empty.</exception>
         private async Task GenerateCourse(int rep = 1)
         {
+            //if (GenStatus == CourseGenerationStatus.Busy) return;
             if (CourseSegments.Count == 0) throw new Exception("No course segments given.");
+
 
             for (; rep >= 0; rep--)
             {
                 uint genidx = Gen.Randi() % (uint)CourseSegments.Count;
-                //GD.Print($"Loaded course segments: {CourseSegments.Count}, selected: {genidx}");
 
                 var seg = CourseSegments[(int)genidx].Instance() as Segment;
 
@@ -135,6 +152,9 @@ namespace A_NEAT_arena.Game
             RunnerDetector.Position = new Vector2(1920, 0);
             DeathLaser.Position = new Vector2(-30, 0);
 
+            BatchTimer.Stop();
+            BatchTimer.WaitTime = Timeout;
+
             IsReset = true;
         }
 
@@ -161,9 +181,14 @@ namespace A_NEAT_arena.Game
         {
             if (body.GetType().IsSubclassOf(typeof(BaseRunner)))
             {
+                if (GenStatus != CourseGenerationStatus.Free) return;
+                GenStatus = CourseGenerationStatus.Busy;
+
                 await GenerateCourse();
                 var pos = Course[Course.Count - 2].Position;
                 RunnerDetector.Position = pos;
+
+                GenStatus = CourseGenerationStatus.Free;
             }
         }
 
@@ -179,13 +204,15 @@ namespace A_NEAT_arena.Game
 
         private async void OnRunnerDied(BaseRunner runner)
         {
-            if (runner.GetType() != typeof(PlayerRunner))
-            {
+            //if (runner.GetType() != typeof(PlayerRunner))
+            //{
 
-            }
+            //}
+
+            await RunnerDeletionManager.WaitAsync();
 
             Runners.Remove(runner);
-            //runner.QueueFree();
+            KillAllRunners -= runner.Die;
 
             if (Runners.Count < 1)
             {
@@ -194,11 +221,24 @@ namespace A_NEAT_arena.Game
                 await Reset();
                 GameOverEvent?.Invoke();
             }
+
+            RunnerDeletionManager.Release();
+        }
+
+        public void On_BatchTimer_Timeout()
+        {
+            KillAllRunners?.Invoke(BaseRunner.CauseOfDeath.Timeout);
         }
 
         private void UpdateLaserPosition()
         {
             LaserPosition = DeathLaser.GlobalPosition.x;
+        }
+
+        public enum CourseGenerationStatus
+        {
+            Free = 0,
+            Busy = 1
         }
     }
 }

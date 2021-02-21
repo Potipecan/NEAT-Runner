@@ -6,7 +6,7 @@ namespace A_NEAT_arena.Game
 {
     public class Coin : Area2D
     {
-        public static readonly float Value = 100;
+        public static float Value = 1000;
 
         private List<BaseRunner> ignoreList;
 

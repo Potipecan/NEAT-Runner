@@ -18,10 +18,19 @@ namespace A_NEAT_arena.Game
         private delegate void TriggerRaycastUpdate();
         private event TriggerRaycastUpdate RaycastUpdate;
 
+        private delegate void AddRayCastException(RID rid);
+        private event AddRayCastException AddException;
+
         private IBlackBox _brain;
         private NeatGenome _genome;
+        public NeatGenome Genome { get => _genome; }
         private List<RayCast2D> Rays;
         private Node2D Eye;
+
+        private float positionPollTimer;
+        private Vector2[] lastPolledPosition;
+        private static float positionPollInterval = 1f;
+
         private float idleTimer, idleTimeout;
         private float IdleTimer
         {
@@ -42,6 +51,7 @@ namespace A_NEAT_arena.Game
             Rays = new List<RayCast2D>();
             idleTimeout = 2f;
             Score = -1000f;
+            
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -54,7 +64,14 @@ namespace A_NEAT_arena.Game
                 Rays.Add(c);
                 RaycastUpdate += c.ForceRaycastUpdate;
                 RaycastUpdate += c.ForceUpdateTransform;
+                AddException += c.AddExceptionRid;
             }
+
+            lastPolledPosition = new Vector2[3];
+            lastPolledPosition[0] = GlobalPosition;
+            lastPolledPosition[1] = GlobalPosition;
+            lastPolledPosition[2] = GlobalPosition;
+
         }
 
         public override void _PhysicsProcess(float delta)
@@ -66,6 +83,9 @@ namespace A_NEAT_arena.Game
                 //lastPosition = GlobalPosition;
                 IdleTimer = 0f;
             }
+
+            PollPosition(positionPollInterval);
+
         }
 
         public void Init(NeatGenome genome, IBlackBox phenome)
@@ -96,6 +116,22 @@ namespace A_NEAT_arena.Game
             else Eye.Rotation = Velocity.Angle();
             RaycastUpdate?.Invoke();
         }
+
+        protected void PollPosition(float delta)
+        {
+            positionPollTimer += delta;
+            if (positionPollTimer >= positionPollInterval)
+            {
+                var pollCenter = new Vector2((lastPolledPosition[0].x + lastPolledPosition[1].x + lastPolledPosition[2].x) / 3f, (lastPolledPosition[0].y + lastPolledPosition[1].y + lastPolledPosition[2].y) / 3f);
+
+                Score += pollCenter.DistanceSquaredTo(GlobalPosition) / 60f;
+                lastPolledPosition[0] = lastPolledPosition[1];
+                lastPolledPosition[1] = lastPolledPosition[2];
+                lastPolledPosition[2] = GlobalPosition;
+                positionPollTimer -= positionPollInterval;
+            }
+        }
+
 
         #region inherited overridable functions
         protected override void HandleInput()
@@ -185,7 +221,7 @@ namespace A_NEAT_arena.Game
                     break;
             }
 
-
+            PollPosition(2f);
             _genome.EvaluationInfo.SetFitness(Score);
             base.Die(cause);
         }
@@ -194,9 +230,9 @@ namespace A_NEAT_arena.Game
         {
             if (!PickedUpCoins.Contains(coin))
             {
-                Score += 100;
+                Score += Coin.Value;
                 PickedUpCoins.Add(coin);
-                Rays.ForEach(r => r.AddExceptionRid(coin.GetRid()));
+                AddException?.Invoke(coin.GetRid());
             }
         }
 
@@ -204,9 +240,9 @@ namespace A_NEAT_arena.Game
         {
             if (!TouchedFlags.Contains(flag))
             {
-                Score += 1000;
+                Score += Flag.Value;
                 TouchedFlags.Add(flag);
-                Rays.ForEach(r => r.AddExceptionRid(flag.GetRid()));
+                AddException?.Invoke(flag.GetRid());
             }
         }
         #endregion

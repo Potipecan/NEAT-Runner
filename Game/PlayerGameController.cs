@@ -40,6 +40,11 @@ namespace A_NEAT_arena.Game
         {
             //throw new NotImplementedException();
         }
+
+        public void Stop()
+        {
+            //throw new NotImplementedException();
+        }
         #endregion
     }
 }

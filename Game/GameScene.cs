@@ -15,13 +15,18 @@ namespace A_NEAT_arena.Game
         public SceneTree Tree { get; private set; }
         public Camera2D Camera { get; private set; }
         public PlayArea PlayArea { get; private set; }
+        public EvolutionInfoPanel EvolutionInfoPanel { get; private set; }
+        public RunnerInfo RunnerInfoPanel { get; private set; }
+
         private SetupOptions SetupOptions;
         private Label ScoreLabel;
         private NEATSettings NeatSettings;
-        private Control GameHUD, SettingsHUD;
+        private Control GameHUD, SettingsHUD, MenuPanel;
         private AcceptDialog Warning;
 
+
         public List<BaseRunner> Runners;
+        public ulong Seed { get => SetupOptions.Seed; }
         //public List<PhenomePack> Boxes;
 
         private RunnerMode mode;
@@ -77,6 +82,9 @@ namespace A_NEAT_arena.Game
 
             GameHUD = Camera.GetNode<Control>("GameHUD");
             ScoreLabel = GameHUD.GetNode<Label>("ScoreLabel");
+            MenuPanel = GameHUD.GetNode<ColorRect>("MenuPanel");
+            EvolutionInfoPanel = GameHUD.GetNode<EvolutionInfoPanel>("EvolutionInfoPanel");
+            RunnerInfoPanel = GameHUD.GetNode<RunnerInfo>("RunnerInfo");
 
             SettingsHUD = Camera.GetNode<Control>("SettingsHUD");
             SetupOptions = SettingsHUD.GetNode<SetupOptions>("SetupOptions");
@@ -89,6 +97,7 @@ namespace A_NEAT_arena.Game
             PlayArea.GameOverEvent += OnGameOver;
             NeatSettings.ParametersSet += On_NeatSettings_ParametersSet;
             SetupOptions.GamemodeSwitched += On_SetupOptions_GamemodeSwitched;
+            GameHUD.GetNode<Button>("MenuPanel/PauseResumeButton").Connect("pressed", this, nameof(On_PauseResumeButton_Pressed));
 
             PlayArea.CourseSegments = SetupOptions.LoadedSegments;
 
@@ -109,14 +118,25 @@ namespace A_NEAT_arena.Game
             ScoreLabel.Text = $"{score}";
         }
 
-        public async void StartRun(List<BaseRunner> runners = null)
+        public async void StartRun(List<BaseRunner> runners = null, ulong seed = 0)
         {
             if (runners != null) Runners = runners;
             SettingsHUD.Hide();
+            GameHUD.Show();
             PlayArea.LaserSpeed = SetupOptions.LaserSpeed;
             PlayArea.LaserAcc = SetupOptions.LaserAcc;
-            await PlayArea.Restart(Runners, SetupOptions.Seed);
+            await PlayArea.Restart(Runners, seed);
             Tree.Paused = false;
+
+        }
+
+        public async void Reset()
+        {
+            await PlayArea.Reset();
+            GameHUD.Hide();
+            SettingsHUD.Show();
+            Tree.Paused = true;
+            Camera.Position = new Vector2();
         }
 
         #region Signals and events
@@ -164,7 +184,12 @@ namespace A_NEAT_arena.Game
 
         public void On_QuitButton_Pressed()
         {
-            
+            Tree.ChangeScene("res://Game/MainMenu.tscn");
+        }
+
+        public void On_PauseResumeButton_Pressed()
+        {
+            Tree.Paused = !Tree.Paused;
         }
 
         #endregion

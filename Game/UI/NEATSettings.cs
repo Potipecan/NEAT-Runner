@@ -12,12 +12,20 @@ namespace A_NEAT_arena.Game
     {
         public event EventHandler ParametersSet;
 
+        public delegate bool CheckStop(int gen, int eval, float score);
+        public static CheckStop CheckStopCondition;
+
+        private int stopConditionTreshold;
+
         // Experiment control inputs
         private SpinBox SpeciesNumSB, GenSizeSB, BatchSizeSB;
         // Reproduction settings inputs
         private SpinBox ElitismSB, SelectionSB, PropagationRatioSB, InterspeciesMatingSB;
         // Genome settings inputs
         private SpinBox NodeMutation, AddConn, DeleteConn, ConnWeight, InitialConnProportion;
+
+        private OptionButton StopCondition;
+        private SpinBox StopCondtionTreshold;
 
 
         private ConfirmationDialog ConfirmDialog;
@@ -76,13 +84,18 @@ namespace A_NEAT_arena.Game
             ConnWeight = GetNode<SpinBox>("Genome/Weight");
             InitialConnProportion = GetNode<SpinBox>("Genome/Initial");
 
+            StopCondition = GetNode<OptionButton>("StopCondition/Options");
+            StopCondtionTreshold = GetNode<SpinBox>("StopCondition/Treshold");
+
             ConfirmDialog = GetNode<ConfirmationDialog>("ConfirmDialog");
 
             GetNode<Button>("SetParamsButton").Connect("pressed", this, nameof(On_SetParamsButton_Pressed));
             ConfirmDialog.Connect("confirmed", this, nameof(On_ConfirmDialog_Confirmed));
+            StopCondition.Connect("item_selected", this, nameof(On_StopCondition_Changed));
 
             NeatParams = new NeatEvolutionAlgorithmParameters();
             GenomeParams = new NeatGenomeParameters();
+            CheckStopCondition = GenerationStopCondition;
         }
 
         public BundledExperimentSettings GetBundledExperimetSettings()
@@ -146,9 +159,49 @@ namespace A_NEAT_arena.Game
         /// </summary>
         private void On_ConfirmDialog_Confirmed()
         {
+            stopConditionTreshold = (int)StopCondtionTreshold.Value;
             GetNeatParameters();
             GetGenomeParameters();
             ParametersSet?.Invoke(this, new EventArgs());
+        }
+
+        public void On_StopCondition_Changed(int id)
+        {
+            switch ((StopConditionOptions)id)
+            {
+                case StopConditionOptions.Generation:
+                    CheckStopCondition = GenerationStopCondition;
+                    break;
+                case StopConditionOptions.EvaluationCount:
+                    CheckStopCondition = EvaluationCountStopCondition;
+                    break;
+                case StopConditionOptions.Score:
+                    CheckStopCondition = ScoreStopCondition;
+                    break;
+            }
+
+        }
+
+        private bool GenerationStopCondition(int gen, int eval, float maxscore)
+        {
+            return gen >= stopConditionTreshold;
+        }
+
+        private bool EvaluationCountStopCondition(int gen, int eval, float maxscore)
+        {
+            return eval >= stopConditionTreshold;
+        }
+
+        private bool ScoreStopCondition(int gen, int eval, float maxscore)
+        {
+            return maxscore >= stopConditionTreshold;
+        }
+
+        private enum StopConditionOptions
+        {
+            Generation = 0,
+            EvaluationCount = 1,
+            Score = 2
         }
     }
 }

@@ -1,0 +1,110 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assests/Fonts/MenuButtonFont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Game/UI/EvolutionInfoPanel.cs" type="Script" id=2]
+
+[node name="EvolutionInfoPanel" type="ColorRect"]
+margin_right = 247.0
+margin_bottom = 246.0
+color = Color( 0.439216, 0.439216, 0.439216, 0.54902 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = -1.26001
+margin_top = -1.88989
+margin_right = 246.74
+margin_bottom = 54.1101
+custom_fonts/font = ExtResource( 1 )
+text = "Evolution info"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 14.74
+margin_top = 62.1101
+margin_right = 159.74
+margin_bottom = 144.11
+text = "Generation:
+Population count:
+Specie count:
+Batch no.:
+Alive:"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfoLabel" type="Label" parent="Label2"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 0.585
+margin_left = 8.0
+margin_right = 79.0
+margin_bottom = 0.0299988
+text = "/
+/
+/"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BatchNo" type="Label" parent="Label2"]
+anchor_left = 1.0
+anchor_top = 0.622
+anchor_right = 1.0
+anchor_bottom = 0.622
+margin_left = 8.0
+margin_top = -0.00400162
+margin_right = 79.0
+margin_bottom = 13.996
+text = "{0}"
+
+[node name="AliveCount" type="Label" parent="Label2"]
+anchor_left = 1.0
+anchor_top = 0.826
+anchor_right = 1.0
+anchor_bottom = 0.826
+margin_left = 8.0
+margin_top = 0.267998
+margin_right = 79.0
+margin_bottom = 14.268
+text = "{0}"
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 14.74
+margin_top = 158.11
+margin_right = 160.74
+margin_bottom = 223.11
+text = "Last max fitness:
+Last mean fitness:
+Last max complexity:
+Last mean complexity:"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StatLabel" type="Label" parent="Label3"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_right = 78.0
+text = "/
+/
+/
+/"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

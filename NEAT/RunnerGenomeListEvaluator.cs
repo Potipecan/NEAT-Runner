@@ -18,12 +18,16 @@ namespace A_NEAT_arena.NEAT
         private delegate void RunStarter(List<BaseRunner> runners);
         private event RunStarter StartRun;
 
+        private ulong evaluationCount;
         public ulong EvaluationCount => 0;
 
-        public bool StopConditionSatisfied => false;
+        private bool stopConditionSatisfied;
+        public bool StopConditionSatisfied => stopConditionSatisfied;
 
         private uint batchSize;
         public uint BatchSize { get => batchSize; set { batchSize = value; } }
+
+        public ulong Seed { get; set; }
 
         private int batch;
         public int Batch { get => batch; }
@@ -44,13 +48,14 @@ namespace A_NEAT_arena.NEAT
             _genomeDecoder = genomeDecoder;
             _newcache = new List<BaseRunner>();
             batchWaiter = new SemaphoreSlim(0, 1);
+            evaluationCount = 0;
         }
 
         public void Evaluate(IList<NeatGenome> genomeList)
         {
             //GD.Print($"Genome count: {genomeList.Count}, Batch size: {BatchSize}");
             var taskList = new List<Task>();
-            batch = 1;
+            batch = 0;
             //var t = Task.Run(() => { /*System.Threading.Thread.Sleep(500);*/ });
 
             while (PrepBatch(genomeList))
@@ -62,13 +67,14 @@ namespace A_NEAT_arena.NEAT
                     int i = listIndex;
                     //GD.Print($"{i} enters semaphore.");
 
-                    _testEnv.Tree.CreateTimer(0f).Connect("timeout", _testEnv, nameof(GameScene.StartRun), new Godot.Collections.Array() { cache });
+                    _testEnv.Tree.CreateTimer(0f).Connect("timeout", _testEnv, nameof(GameScene.StartRun), new Godot.Collections.Array() { cache, Seed });
 
                     batchWaiter.Wait();
 
                 }).Wait();
 
             }
+
             listIndex = 0;
         }
 
@@ -101,6 +107,8 @@ namespace A_NEAT_arena.NEAT
                 runner.Init(genomeList[listIndex], phenome);
                 _newcache.Add(runner);
             }
+
+            evaluationCount += (ulong)batchsize;
 
             return true;
         }

@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assests/Fonts/MenuButtonFont.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Game/UI/RunnerInfo.cs" type="Script" id=2]
+
+[node name="RunnerInfo" type="ColorRect"]
+margin_right = 256.0
+margin_bottom = 144.0
+color = Color( 0.439216, 0.439216, 0.439216, 0.54902 )
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 8.0
+margin_right = 328.0
+margin_bottom = 40.0
+custom_fonts/font = ExtResource( 1 )
+text = "Runner Info"
+
+[node name="RunnerInfoLabel" type="Label" parent="."]
+margin_left = 8.0
+margin_top = 48.0
+margin_right = 128.0
+margin_bottom = 152.0
+text = "ID:
+Specie:
+Complexity:
+Neuron count:
+Connection count:"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Data" type="Label" parent="RunnerInfoLabel"]
+margin_left = 128.0
+margin_right = 232.0
+margin_bottom = 56.0
+text = "{0}
+{1}
+{2}
+{3}
+{4}"
