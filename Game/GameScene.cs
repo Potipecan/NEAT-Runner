@@ -130,9 +130,9 @@ namespace A_NEAT_arena.Game
 
         }
 
-        public async void Reset()
+        public void Reset()
         {
-            await PlayArea.Reset();
+            PlayArea.Reset();
             GameHUD.Hide();
             SettingsHUD.Show();
             Tree.Paused = true;
@@ -144,7 +144,7 @@ namespace A_NEAT_arena.Game
         {
             if (Mode != RunnerMode.AI) throw new Exception("NEAT parameters can only be set when game is in AI mode");
 
-            Task.Run(async () => await PlayArea.Reset()).Wait();
+            PlayArea.Reset();
             Tree.Paused = true;
             neat.InitializeNetwork(NeatSettings.GetBundledExperimetSettings(), ANNRunner.InputCount, ANNRunner.OutputCount);
         }
@@ -154,16 +154,16 @@ namespace A_NEAT_arena.Game
             //generation++;
         }
 
-        
+
 
         private void On_StartButton_Pressed()
         {
-            if(SetupOptions.LoadedSegments.Count <= 0)
+            if (SetupOptions.LoadedSegments.Count <= 0)
             {
                 ShowWarningPopup("Unable to start!", "No loaded course segments.");
                 return;
             }
-            if(Mode == RunnerMode.AI && NeatSettings.NeatParams == null)
+            if (Mode == RunnerMode.AI && NeatSettings.NeatParams == null)
             {
                 ShowWarningPopup("Unable to start!", "NEAT parameters not set.");
                 return;

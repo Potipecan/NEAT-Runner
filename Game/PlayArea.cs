@@ -49,14 +49,14 @@ namespace A_NEAT_arena.Game
         }
 
         // Called when the node enters the scene tree for the first time.
-        public override async void _Ready()
+        public override void _Ready()
         {
             Start = GD.Load<PackedScene>("res://Game/Start.tscn");
             RunnerDetector = GetNode<Area2D>("RunnerDetector");
             DeathLaser = GetNode<Node2D>("Beam");
             BatchTimer = GetNode<Godot.Timer>("BatchTimer");
 
-            await Reset();
+            Reset();
         }
 
         // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -79,7 +79,7 @@ namespace A_NEAT_arena.Game
             Gen.Seed = seed;
             Runners = runners;
 
-            await Reset();
+            Reset();
             await GenerateCourse(2);
 
             BatchTimer.Start();
@@ -132,7 +132,7 @@ namespace A_NEAT_arena.Game
         /// <summary>
         /// Resets the PlayArea
         /// </summary>
-        public async Task Reset()
+        public void Reset()
         {
             if (IsReset) return;
 
@@ -147,7 +147,7 @@ namespace A_NEAT_arena.Game
             start.FreedEvent += OnSegmentFreed;
             Course.Add(start);
             CallDeferred("add_child", start);
-            await ToSignal(start, "ready");
+            //await ToSignal(start, "ready");
 
             RunnerDetector.Position = new Vector2(1920, 0);
             DeathLaser.Position = new Vector2(-30, 0);
@@ -202,14 +202,8 @@ namespace A_NEAT_arena.Game
             Course.Remove(sender);
         }
 
-        private async void OnRunnerDied(BaseRunner runner)
+        private void OnRunnerDied(BaseRunner runner)
         {
-            //if (runner.GetType() != typeof(PlayerRunner))
-            //{
-
-            //}
-
-            await RunnerDeletionManager.WaitAsync();
 
             Runners.Remove(runner);
             KillAllRunners -= runner.Die;
@@ -218,15 +212,15 @@ namespace A_NEAT_arena.Game
             {
                 GetTree().Paused = true;
 
-                await Reset();
+                Reset();
                 GameOverEvent?.Invoke();
             }
 
-            RunnerDeletionManager.Release();
         }
 
         public void On_BatchTimer_Timeout()
         {
+            GetTree().Paused = true;
             KillAllRunners?.Invoke(BaseRunner.CauseOfDeath.Timeout);
         }
 

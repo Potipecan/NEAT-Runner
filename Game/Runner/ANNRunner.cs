@@ -51,7 +51,7 @@ namespace A_NEAT_arena.Game
             Rays = new List<RayCast2D>();
             idleTimeout = 2f;
             Score = -1000f;
-            
+
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -98,12 +98,12 @@ namespace A_NEAT_arena.Game
 
         private void RotateEye()
         {
-            if(State == RunnerState.OnLeftWall)
+            if (State == RunnerState.OnLeftWall)
             {
                 Eye.Rotation = 0f;
                 return;
             }
-            else if(State == RunnerState.OnRightWall)
+            else if (State == RunnerState.OnRightWall)
             {
                 Eye.Rotation = Mathf.Pi;
                 return;
@@ -205,25 +205,30 @@ namespace A_NEAT_arena.Game
 
         public override void Die(CauseOfDeath cause)
         {
-            switch (cause)
-            {
-                case CauseOfDeath.Saw:
-                    Score += 50;
-                    break;
-                case CauseOfDeath.Laser:
-                    Score += 100f;
-                    break;
-                case CauseOfDeath.Idling:
-                    Score += 10;
-                    break;
-                case CauseOfDeath.Void:
-                    Score -= 0f;
-                    break;
-            }
+            if (State == RunnerState.Dead) return;
+            State = RunnerState.Dead;
+            //Task.Run(() =>
+            //{
+                switch (cause)
+                {
+                    case CauseOfDeath.Saw:
+                        Score += 50;
+                        break;
+                    case CauseOfDeath.Laser:
+                        Score += 100f;
+                        break;
+                    case CauseOfDeath.Idling:
+                        Score += 10;
+                        break;
+                    case CauseOfDeath.Void:
+                        Score -= 0f;
+                        break;
+                }
 
-            PollPosition(2f);
-            _genome.EvaluationInfo.SetFitness(Score);
-            base.Die(cause);
+                PollPosition(2f);
+                _genome.EvaluationInfo.SetFitness(Score);
+                base.Die(cause);
+            //});
         }
 
         public override void PickupCoin(Coin coin)
