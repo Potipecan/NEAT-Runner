@@ -74,13 +74,13 @@ namespace A_NEAT_arena.Game
         /// <param name="runners">New batch of runners</param>
         /// <param name="seed">Course generation seed</param>
         /// <returns>Executable task</returns>
-        public async Task Restart(List<BaseRunner> runners, ulong seed)
+        public void Restart(List<BaseRunner> runners, ulong seed)
         {
             Gen.Seed = seed;
             Runners = runners;
 
             Reset();
-            await GenerateCourse(2);
+            GenerateCourse(2);
 
             BatchTimer.Start();
 
@@ -91,7 +91,7 @@ namespace A_NEAT_arena.Game
                 runner.Position = pos;
                 KillAllRunners += runner.Die;
                 CallDeferred("add_child", runner);
-                await ToSignal(runner, "ready");
+                //await ToSignal(runner, "ready");
                 spawnedcnt++;
                 runner.DiedEvent += OnRunnerDied;
             }
@@ -104,7 +104,7 @@ namespace A_NEAT_arena.Game
         /// </summary>
         /// <param name="rep">Amount of course segments to generate</param>
         /// <exception cref="System.Exception">Thrown when <c>CourseSegments</c> is empty.</exception>
-        private async Task GenerateCourse(int rep = 1)
+        private void GenerateCourse(int rep = 1)
         {
             //if (GenStatus == CourseGenerationStatus.Busy) return;
             if (CourseSegments.Count == 0) throw new Exception("No course segments given.");
@@ -123,7 +123,7 @@ namespace A_NEAT_arena.Game
                 Course.Add(seg);
                 seg.FreedEvent += OnSegmentFreed;
                 CallDeferred("add_child", seg);
-                await ToSignal(seg, "ready");
+                //await ToSignal(seg, "ready");
 
                 IsReset = false;
             }
@@ -177,14 +177,14 @@ namespace A_NEAT_arena.Game
         /// Adds a new segment to the course and moves the RunnerDetector.
         /// </summary>
         /// <param name="body">Trigger node</param>
-        public async void OnRunnerDetectorBodyEntered(Node body)
+        public void OnRunnerDetectorBodyEntered(Node body)
         {
             if (body.GetType().IsSubclassOf(typeof(BaseRunner)))
             {
                 if (GenStatus != CourseGenerationStatus.Free) return;
                 GenStatus = CourseGenerationStatus.Busy;
 
-                await GenerateCourse();
+                GenerateCourse();
                 var pos = Course[Course.Count - 2].Position;
                 RunnerDetector.Position = pos;
 

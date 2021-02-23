@@ -98,6 +98,7 @@ namespace A_NEAT_arena.Game
             NeatSettings.ParametersSet += On_NeatSettings_ParametersSet;
             SetupOptions.GamemodeSwitched += On_SetupOptions_GamemodeSwitched;
             GameHUD.GetNode<Button>("MenuPanel/PauseResumeButton").Connect("pressed", this, nameof(On_PauseResumeButton_Pressed));
+            GameHUD.GetNode<Button>("MenuPanel/ExitButton").Connect("pressed", this, nameof(On_ExitButton_Pressed));
 
             PlayArea.CourseSegments = SetupOptions.LoadedSegments;
 
@@ -118,14 +119,14 @@ namespace A_NEAT_arena.Game
             ScoreLabel.Text = $"{score}";
         }
 
-        public async void StartRun(List<BaseRunner> runners = null, ulong seed = 0)
+        public void StartRun(List<BaseRunner> runners = null, ulong seed = 0)
         {
             if (runners != null) Runners = runners;
             SettingsHUD.Hide();
             GameHUD.Show();
             PlayArea.LaserSpeed = SetupOptions.LaserSpeed;
             PlayArea.LaserAcc = SetupOptions.LaserAcc;
-            await PlayArea.Restart(Runners, seed);
+            PlayArea.Restart(Runners, seed);
             Tree.Paused = false;
 
         }
@@ -190,6 +191,11 @@ namespace A_NEAT_arena.Game
         public void On_PauseResumeButton_Pressed()
         {
             Tree.Paused = !Tree.Paused;
+        }
+
+        public void On_ExitButton_Pressed()
+        {
+            controller.Stop();
         }
 
         #endregion

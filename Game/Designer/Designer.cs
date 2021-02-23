@@ -7,7 +7,6 @@ namespace A_NEAT_arena.Game
     [Tool]
     public class Designer : TileMap
     {
-        private AcceptDialog FlagsAlert; 
 
         [Export] public string SavesFolder { get; set; } = "res://Saves/";
         [Export] public string FileName { get; set; }
@@ -25,7 +24,6 @@ namespace A_NEAT_arena.Game
         public override void _Ready()
         {
             base._Ready();
-            FlagsAlert = GetNode<AcceptDialog>("FlagsAlert");
         }
 
         public void SaveFile()

@@ -1,0 +1,467 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Game/Designer/Pickups/Coin.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Game/Designer/TileSets/Danger.tres" type="TileSet" id=2]
+[ext_resource path="res://Game/Designer/TileSets/Env.tres" type="TileSet" id=3]
+[ext_resource path="res://Game/Designer/Pickups/Coin.cs" type="Script" id=4]
+[ext_resource path="res://Game/Designer/Segment.cs" type="Script" id=5]
+[ext_resource path="res://Game/Designer/Pickups/Flag.cs" type="Script" id=6]
+[ext_resource path="res://Game/Designer/Pickups/Flag.tscn" type="PackedScene" id=7]
+
+[node name="Saws1" type="Node2D"]
+z_index = -2
+script = ExtResource( 5 )
+Flag = Object(Area2D,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"visible":true,"modulate":Color( 1, 1, 1, 1 ),"self_modulate":Color( 1, 1, 1, 1 ),"show_behind_parent":false,"light_mask":1,"material":null,"use_parent_material":false,"position":Vector2( 780, 120 ),"rotation":0.0,"scale":Vector2( 1, 1 ),"z_index":0,"z_as_relative":true,"input_pickable":true,"space_override":0,"gravity_point":false,"gravity_distance_scale":0.0,"gravity_vec":Vector2( 0, 1 ),"gravity":98.0,"linear_damp":0.1,"angular_damp":1.0,"priority":0.0,"monitoring":true,"monitorable":true,"collision_layer":1,"collision_mask":1,"audio_bus_override":false,"audio_bus_name":"Master","script":ExtResource( 6 ),"TouchedRunners":[  ])
+
+Plan = {
+0: [ Vector2( 0, -1 ), Vector2( 1, -1 ), Vector2( 2, -1 ), Vector2( 3, -1 ), Vector2( 4, -1 ), Vector2( 5, -1 ), Vector2( 6, -1 ), Vector2( 7, -1 ), Vector2( 8, -1 ), Vector2( 9, -1 ), Vector2( 10, -1 ), Vector2( 11, -1 ), Vector2( 12, -1 ), Vector2( 13, -1 ), Vector2( 14, -1 ), Vector2( 15, -1 ), Vector2( 16, -1 ), Vector2( 17, -1 ), Vector2( 18, -1 ), Vector2( 19, -1 ), Vector2( 20, -1 ), Vector2( 21, -1 ), Vector2( 22, -1 ), Vector2( 23, -1 ), Vector2( 24, -1 ), Vector2( 25, -1 ), Vector2( 26, -1 ), Vector2( 27, -1 ), Vector2( 28, -1 ), Vector2( 29, -1 ), Vector2( 30, -1 ), Vector2( 31, -1 ), Vector2( 0, 0 ), Vector2( 1, 0 ), Vector2( 2, 0 ), Vector2( 3, 0 ), Vector2( 4, 0 ), Vector2( 5, 0 ), Vector2( 6, 0 ), Vector2( 7, 0 ), Vector2( 8, 0 ), Vector2( 9, 0 ), Vector2( 10, 0 ), Vector2( 11, 0 ), Vector2( 12, 0 ), Vector2( 13, 0 ), Vector2( 14, 0 ), Vector2( 15, 0 ), Vector2( 16, 0 ), Vector2( 17, 0 ), Vector2( 18, 0 ), Vector2( 19, 0 ), Vector2( 20, 0 ), Vector2( 21, 0 ), Vector2( 22, 0 ), Vector2( 23, 0 ), Vector2( 24, 0 ), Vector2( 25, 0 ), Vector2( 26, 0 ), Vector2( 27, 0 ), Vector2( 28, 0 ), Vector2( 29, 0 ), Vector2( 30, 0 ), Vector2( 31, 0 ), Vector2( 5, 1 ), Vector2( 18, 1 ), Vector2( 5, 2 ), Vector2( 18, 2 ), Vector2( 5, 3 ), Vector2( 9, 3 ), Vector2( 13, 3 ), Vector2( 18, 3 ), Vector2( 22, 3 ), Vector2( 26, 3 ), Vector2( 5, 4 ), Vector2( 9, 4 ), Vector2( 13, 4 ), Vector2( 18, 4 ), Vector2( 22, 4 ), Vector2( 26, 4 ), Vector2( 5, 5 ), Vector2( 9, 5 ), Vector2( 13, 5 ), Vector2( 18, 5 ), Vector2( 22, 5 ), Vector2( 26, 5 ), Vector2( 5, 6 ), Vector2( 9, 6 ), Vector2( 13, 6 ), Vector2( 18, 6 ), Vector2( 22, 6 ), Vector2( 26, 6 ), Vector2( 5, 7 ), Vector2( 13, 7 ), Vector2( 18, 7 ), Vector2( 26, 7 ), Vector2( 5, 8 ), Vector2( 13, 8 ), Vector2( 18, 8 ), Vector2( 26, 8 ), Vector2( 5, 9 ), Vector2( 13, 9 ), Vector2( 18, 9 ), Vector2( 26, 9 ), Vector2( 5, 10 ), Vector2( 9, 10 ), Vector2( 13, 10 ), Vector2( 18, 10 ), Vector2( 22, 10 ), Vector2( 26, 10 ), Vector2( 5, 11 ), Vector2( 9, 11 ), Vector2( 13, 11 ), Vector2( 18, 11 ), Vector2( 22, 11 ), Vector2( 26, 11 ), Vector2( 5, 12 ), Vector2( 9, 12 ), Vector2( 13, 12 ), Vector2( 18, 12 ), Vector2( 22, 12 ), Vector2( 26, 12 ), Vector2( 5, 13 ), Vector2( 9, 13 ), Vector2( 13, 13 ), Vector2( 18, 13 ), Vector2( 22, 13 ), Vector2( 26, 13 ), Vector2( 13, 14 ), Vector2( 14, 14 ), Vector2( 26, 14 ), Vector2( 13, 15 ), Vector2( 14, 15 ), Vector2( 26, 15 ), Vector2( 13, 16 ), Vector2( 14, 16 ), Vector2( 26, 16 ), Vector2( 0, 17 ), Vector2( 1, 17 ), Vector2( 2, 17 ), Vector2( 3, 17 ), Vector2( 4, 17 ), Vector2( 5, 17 ), Vector2( 6, 17 ), Vector2( 7, 17 ), Vector2( 8, 17 ), Vector2( 9, 17 ), Vector2( 10, 17 ), Vector2( 11, 17 ), Vector2( 12, 17 ), Vector2( 13, 17 ), Vector2( 14, 17 ), Vector2( 15, 17 ), Vector2( 16, 17 ), Vector2( 17, 17 ), Vector2( 18, 17 ), Vector2( 19, 17 ), Vector2( 20, 17 ), Vector2( 21, 17 ), Vector2( 22, 17 ), Vector2( 23, 17 ), Vector2( 24, 17 ), Vector2( 25, 17 ), Vector2( 26, 17 ), Vector2( 27, 17 ), Vector2( 28, 17 ), Vector2( 29, 17 ), Vector2( 30, 17 ), Vector2( 31, 17 ), Vector2( 0, 18 ), Vector2( 1, 18 ), Vector2( 2, 18 ), Vector2( 3, 18 ), Vector2( 4, 18 ), Vector2( 5, 18 ), Vector2( 6, 18 ), Vector2( 7, 18 ), Vector2( 8, 18 ), Vector2( 9, 18 ), Vector2( 10, 18 ), Vector2( 11, 18 ), Vector2( 12, 18 ), Vector2( 13, 18 ), Vector2( 14, 18 ), Vector2( 15, 18 ), Vector2( 16, 18 ), Vector2( 17, 18 ), Vector2( 18, 18 ), Vector2( 19, 18 ), Vector2( 20, 18 ), Vector2( 21, 18 ), Vector2( 22, 18 ), Vector2( 23, 18 ), Vector2( 24, 18 ), Vector2( 25, 18 ), Vector2( 26, 18 ), Vector2( 27, 18 ), Vector2( 28, 18 ), Vector2( 29, 18 ), Vector2( 30, 18 ), Vector2( 31, 18 ) ],
+1: [ Vector2( 6, 3 ), Vector2( 7, 3 ), Vector2( 8, 3 ), Vector2( 10, 3 ), Vector2( 11, 3 ), Vector2( 12, 3 ), Vector2( 19, 3 ), Vector2( 20, 3 ), Vector2( 21, 3 ), Vector2( 23, 3 ), Vector2( 24, 3 ), Vector2( 25, 3 ), Vector2( 6, 6 ), Vector2( 7, 6 ), Vector2( 8, 6 ), Vector2( 10, 6 ), Vector2( 11, 6 ), Vector2( 12, 6 ), Vector2( 19, 6 ), Vector2( 20, 6 ), Vector2( 21, 6 ), Vector2( 23, 6 ), Vector2( 24, 6 ), Vector2( 25, 6 ), Vector2( 6, 10 ), Vector2( 7, 10 ), Vector2( 8, 10 ), Vector2( 10, 10 ), Vector2( 11, 10 ), Vector2( 12, 10 ), Vector2( 19, 10 ), Vector2( 20, 10 ), Vector2( 21, 10 ), Vector2( 23, 10 ), Vector2( 24, 10 ), Vector2( 25, 10 ), Vector2( 6, 13 ), Vector2( 7, 13 ), Vector2( 8, 13 ), Vector2( 10, 13 ), Vector2( 11, 13 ), Vector2( 12, 13 ), Vector2( 19, 13 ), Vector2( 20, 13 ), Vector2( 21, 13 ), Vector2( 23, 13 ), Vector2( 24, 13 ), Vector2( 25, 13 ) ],
+2: [ Vector2( 14, 3 ), Vector2( 14, 4 ), Vector2( 10, 5 ), Vector2( 11, 5 ), Vector2( 12, 5 ), Vector2( 14, 5 ), Vector2( 23, 5 ), Vector2( 24, 5 ), Vector2( 25, 5 ), Vector2( 14, 6 ), Vector2( 9, 7 ), Vector2( 14, 7 ), Vector2( 22, 7 ), Vector2( 6, 8 ), Vector2( 12, 8 ), Vector2( 14, 8 ), Vector2( 14, 9 ), Vector2( 14, 10 ), Vector2( 14, 11 ), Vector2( 6, 12 ), Vector2( 7, 12 ), Vector2( 8, 12 ), Vector2( 14, 12 ), Vector2( 19, 12 ), Vector2( 20, 12 ), Vector2( 21, 12 ), Vector2( 14, 13 ), Vector2( 5, 14 ), Vector2( 9, 14 ), Vector2( 18, 14 ), Vector2( 22, 14 ) ],
+3: [ Vector2( 17, 3 ), Vector2( 6, 4 ), Vector2( 7, 4 ), Vector2( 8, 4 ), Vector2( 17, 4 ), Vector2( 19, 4 ), Vector2( 20, 4 ), Vector2( 21, 4 ), Vector2( 6, 5 ), Vector2( 7, 5 ), Vector2( 8, 5 ), Vector2( 17, 5 ), Vector2( 19, 5 ), Vector2( 20, 5 ), Vector2( 21, 5 ), Vector2( 17, 6 ), Vector2( 17, 7 ), Vector2( 17, 8 ), Vector2( 17, 9 ), Vector2( 17, 10 ), Vector2( 10, 11 ), Vector2( 11, 11 ), Vector2( 12, 11 ), Vector2( 17, 11 ), Vector2( 23, 11 ), Vector2( 24, 11 ), Vector2( 25, 11 ), Vector2( 10, 12 ), Vector2( 11, 12 ), Vector2( 12, 12 ), Vector2( 17, 12 ), Vector2( 23, 12 ), Vector2( 24, 12 ), Vector2( 25, 12 ), Vector2( 17, 13 ), Vector2( 6, 16 ), Vector2( 7, 16 ), Vector2( 8, 16 ), Vector2( 9, 16 ), Vector2( 10, 16 ), Vector2( 11, 16 ), Vector2( 12, 16 ), Vector2( 19, 16 ), Vector2( 20, 16 ), Vector2( 21, 16 ), Vector2( 22, 16 ), Vector2( 23, 16 ), Vector2( 24, 16 ), Vector2( 25, 16 ) ],
+4: [ Vector2( 13, 2 ), Vector2( 26, 2 ), Vector2( 9, 9 ), Vector2( 22, 9 ), Vector2( 18, 16 ) ]
+}
+UsedRect = Rect2( 0, -1, 32, 20 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+rect = Rect2( 0, 0, 1920, 1080 )
+
+[node name="Env" type="TileMap" parent="." groups=[
+"Environment",
+]]
+tile_set = ExtResource( 3 )
+cell_size = Vector2( 60, 60 )
+collision_layer = 2
+format = 1
+tile_data = PoolIntArray( -65536, 0, 0, -65535, 0, 1, -65534, 0, 1, -65533, 0, 1, -65532, 0, 1, -65531, 0, 1, -65530, 0, 1, -65529, 0, 1, -65528, 0, 1, -65527, 0, 1, -65526, 0, 1, -65525, 0, 1, -65524, 0, 1, -65523, 0, 1, -65522, 0, 1, -65521, 0, 1, -65520, 0, 1, -65519, 0, 1, -65518, 0, 1, -65517, 0, 1, -65516, 0, 1, -65515, 0, 1, -65514, 0, 1, -65513, 0, 1, -65512, 0, 1, -65511, 0, 1, -65510, 0, 1, -65509, 0, 1, -65508, 0, 1, -65507, 0, 1, -65506, 0, 1, -65505, 0, 4, 0, 0, 131072, 1, 0, 131073, 2, 0, 131073, 3, 0, 131073, 4, 0, 131073, 5, 0, 262148, 6, 0, 131073, 7, 0, 131073, 8, 0, 131073, 9, 0, 131073, 10, 0, 131073, 11, 0, 131073, 12, 0, 131073, 13, 0, 131073, 14, 0, 131073, 15, 0, 131073, 16, 0, 131073, 17, 0, 131073, 18, 0, 262148, 19, 0, 131073, 20, 0, 131073, 21, 0, 131073, 22, 0, 131073, 23, 0, 131073, 24, 0, 131073, 25, 0, 131073, 26, 0, 131073, 27, 0, 131073, 28, 0, 131073, 29, 0, 131073, 30, 0, 131073, 31, 0, 131076, 65541, 0, 196609, 65554, 0, 196609, 131077, 0, 196609, 131090, 0, 196609, 196613, 0, 196609, 196614, 1, 1, 196615, 1, 1, 196616, 1, 1, 196617, 0, 262145, 196618, 1, 1, 196619, 1, 1, 196620, 1, 1, 196621, 0, 262145, 196626, 0, 196609, 196627, 1, 1, 196628, 1, 1, 196629, 1, 1, 196630, 0, 262145, 196631, 1, 1, 196632, 1, 1, 196633, 1, 1, 196634, 0, 262145, 262149, 0, 196609, 262153, 0, 196609, 262157, 0, 196609, 262162, 0, 196609, 262166, 0, 196609, 262170, 0, 196609, 327685, 0, 196609, 327689, 0, 196609, 327693, 0, 196609, 327698, 0, 196609, 327702, 0, 196609, 327706, 0, 196609, 393221, 0, 196609, 393222, 1, 1, 393223, 1, 1, 393224, 1, 1, 393225, 0, 262147, 393226, 1, 1, 393227, 1, 1, 393228, 1, 1, 393229, 0, 196609, 393234, 0, 196609, 393235, 1, 1, 393236, 1, 1, 393237, 1, 1, 393238, 0, 262147, 393239, 1, 1, 393240, 1, 1, 393241, 1, 1, 393242, 0, 196609, 458757, 0, 196609, 458765, 0, 196609, 458770, 0, 196609, 458778, 0, 196609, 524293, 0, 196609, 524301, 0, 196609, 524306, 0, 196609, 524314, 0, 196609, 589829, 0, 196609, 589837, 0, 196609, 589842, 0, 196609, 589850, 0, 196609, 655365, 0, 196609, 655366, 1, 1, 655367, 1, 1, 655368, 1, 1, 655369, 0, 262145, 655370, 1, 1, 655371, 1, 1, 655372, 1, 1, 655373, 0, 196609, 655378, 0, 196609, 655379, 1, 1, 655380, 1, 1, 655381, 1, 1, 655382, 0, 262145, 655383, 1, 1, 655384, 1, 1, 655385, 1, 1, 655386, 0, 196609, 720901, 0, 196609, 720905, 0, 196609, 720909, 0, 196609, 720914, 0, 196609, 720918, 0, 196609, 720922, 0, 196609, 786437, 0, 196609, 786441, 0, 196609, 786445, 0, 196609, 786450, 0, 196609, 786454, 0, 196609, 786458, 0, 196609, 851973, 0, 262147, 851974, 1, 1, 851975, 1, 1, 851976, 1, 1, 851977, 0, 262147, 851978, 1, 1, 851979, 1, 1, 851980, 1, 1, 851981, 0, 196609, 851986, 0, 262147, 851987, 1, 1, 851988, 1, 1, 851989, 1, 1, 851990, 0, 262147, 851991, 1, 1, 851992, 1, 1, 851993, 1, 1, 851994, 0, 196609, 917517, 0, 65541, 917518, 0, 4, 917530, 0, 196609, 983053, 0, 65536, 983054, 0, 65540, 983066, 0, 196609, 1048589, 0, 65536, 1048590, 0, 65540, 1048602, 0, 196609, 1114112, 0, 0, 1114113, 0, 1, 1114114, 0, 1, 1114115, 0, 1, 1114116, 0, 1, 1114117, 0, 1, 1114118, 0, 1, 1114119, 0, 1, 1114120, 0, 1, 1114121, 0, 1, 1114122, 0, 1, 1114123, 0, 1, 1114124, 0, 1, 1114125, 0, 2, 1114126, 0, 3, 1114127, 0, 1, 1114128, 0, 1, 1114129, 0, 1, 1114130, 0, 1, 1114131, 0, 1, 1114132, 0, 1, 1114133, 0, 1, 1114134, 0, 1, 1114135, 0, 1, 1114136, 0, 1, 1114137, 0, 1, 1114138, 0, 196611, 1114139, 0, 1, 1114140, 0, 1, 1114141, 0, 1, 1114142, 0, 1, 1114143, 0, 4, 1179648, 0, 131072, 1179649, 0, 131073, 1179650, 0, 131073, 1179651, 0, 131073, 1179652, 0, 131073, 1179653, 0, 131073, 1179654, 0, 131073, 1179655, 0, 131073, 1179656, 0, 131073, 1179657, 0, 131073, 1179658, 0, 131073, 1179659, 0, 131073, 1179660, 0, 131073, 1179661, 0, 131073, 1179662, 0, 131073, 1179663, 0, 131073, 1179664, 0, 131073, 1179665, 0, 131073, 1179666, 0, 131073, 1179667, 0, 131073, 1179668, 0, 131073, 1179669, 0, 131073, 1179670, 0, 131073, 1179671, 0, 131073, 1179672, 0, 131073, 1179673, 0, 131073, 1179674, 0, 131073, 1179675, 0, 131073, 1179676, 0, 131073, 1179677, 0, 131073, 1179678, 0, 131073, 1179679, 0, 131076 )
+
+[node name="Danger" type="TileMap" parent="." groups=[
+"Danger",
+]]
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 60, 60 )
+collision_layer = 5
+format = 1
+tile_data = PoolIntArray( 196622, 2, 0, 262158, 2, 0, 327690, 2, 0, 327691, 2, 0, 327692, 2, 0, 327694, 2, 0, 327703, 2, 0, 327704, 2, 0, 327705, 2, 0, 393230, 2, 0, 458761, 2, 0, 458766, 2, 0, 458774, 2, 0, 524294, 2, 0, 524300, 2, 0, 524302, 2, 0, 589838, 2, 0, 655374, 2, 0, 720910, 2, 0, 786438, 2, 0, 786439, 2, 0, 786440, 2, 0, 786446, 2, 0, 786451, 2, 0, 786452, 2, 0, 786453, 2, 0, 851982, 2, 0, 917509, 2, 0, 917513, 2, 0, 917522, 2, 0, 917526, 2, 0 )
+
+[node name="Coin_17_3" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 180 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_6_4" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 360, 240 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_7_4" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 420, 240 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_8_4" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 480, 240 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_4" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 240 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_19_4" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1140, 240 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_20_4" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1200, 240 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_21_4" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1260, 240 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_6_5" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 360, 300 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_7_5" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 420, 300 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_8_5" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 480, 300 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_5" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 300 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_19_5" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1140, 300 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_20_5" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1200, 300 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_21_5" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1260, 300 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_6" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 360 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_7" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 420 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_8" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 480 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_9" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 540 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_10" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 600 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_10_11" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 600, 660 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_11_11" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 660, 660 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_12_11" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 720, 660 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_11" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 660 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_23_11" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1380, 660 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_24_11" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1440, 660 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_25_11" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1500, 660 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_10_12" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 600, 720 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_11_12" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 660, 720 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_12_12" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 720, 720 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_12" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 720 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_23_12" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1380, 720 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_24_12" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1440, 720 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_25_12" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1500, 720 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_17_13" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1020, 780 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_6_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 360, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_7_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 420, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_8_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 480, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_9_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 540, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_10_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 600, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_11_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 660, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_12_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 720, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_19_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1140, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_20_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1200, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_21_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1260, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_22_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1320, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_23_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1380, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_24_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1440, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Coin_25_16" type="Area2D" parent="." groups=[
+"Coins",
+] instance=ExtResource( 1 )]
+position = Vector2( 1500, 960 )
+input_pickable = false
+collision_layer = 4
+script = ExtResource( 4 )
+
+[node name="Flag_13_2" type="Area2D" parent="." groups=[
+"Flags",
+] instance=ExtResource( 7 )]
+position = Vector2( 780, 120 )
+script = ExtResource( 6 )
+
+[node name="Flag_26_2" type="Area2D" parent="." groups=[
+"Flags",
+] instance=ExtResource( 7 )]
+position = Vector2( 1560, 120 )
+script = ExtResource( 6 )
+
+[node name="Flag_9_9" type="Area2D" parent="." groups=[
+"Flags",
+] instance=ExtResource( 7 )]
+position = Vector2( 540, 540 )
+script = ExtResource( 6 )
+
+[node name="Flag_22_9" type="Area2D" parent="." groups=[
+"Flags",
+] instance=ExtResource( 7 )]
+position = Vector2( 1320, 540 )
+script = ExtResource( 6 )
+
+[node name="Flag_18_16" type="Area2D" parent="." groups=[
+"Flags",
+] instance=ExtResource( 7 )]
+position = Vector2( 1080, 960 )
+script = ExtResource( 6 )
+[connection signal="viewport_exited" from="VisibilityNotifier2D" to="." method="OnViewportExited"]

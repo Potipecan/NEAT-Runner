@@ -193,7 +193,7 @@ namespace A_NEAT_arena.NEAT
             
             network.Stop();
             testEnv.Reset();
-            Task.Run(() => ExportToJSON());
+            ExportToJSON();
         }
 
         #endregion
