@@ -198,6 +198,10 @@ namespace A_NEAT_arena.Game
             controller.Stop();
         }
 
+        public void On_PrintIO_Button_Pressed() {
+            (Runners[0] as ANNRunner).PrintIO();
+        }
+
         #endregion
 
         #region Utilities

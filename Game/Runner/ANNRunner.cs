@@ -122,6 +122,16 @@ namespace A_NEAT_arena.Game
             }
         }
 
+        public void PrintIO()
+        {
+            string output = "Inputs: ";
+            for (int i = 0; i < InputCount; i++) output += $"{_brain.InputSignalArray[i]:F2}; ";
+            output += "\nOutputs: ";
+            for (int i = 0; i < OutputCount; i++) output += $"{_brain.OutputSignalArray[i]:F2}; ";
+
+            GD.Print(output);
+        }
+
 
         #region inherited overridable functions
         protected override void HandleInput()

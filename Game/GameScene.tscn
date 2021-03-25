@@ -126,7 +126,6 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="GameHUD" type="Control" parent="MainCamera"]
-visible = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -192,9 +191,17 @@ margin_left = 8.0
 margin_top = 272.0
 margin_right = 216.0
 margin_bottom = 416.0
+
+[node name="PrintIOButton" type="Button" parent="MainCamera/GameHUD"]
+margin_left = 272.0
+margin_top = 24.0
+margin_right = 372.0
+margin_bottom = 44.0
+text = "Print IO"
 [connection signal="body_entered" from="PlayArea/Beam" to="PlayArea" method="On_Beam_BodyEntered"]
 [connection signal="body_exited" from="PlayArea/Beam" to="PlayArea" method="OnBeamBodyExited"]
 [connection signal="body_exited" from="PlayArea/RunnerDetector" to="PlayArea" method="OnRunnerDetectorBodyEntered"]
 [connection signal="timeout" from="PlayArea/BatchTimer" to="PlayArea" method="On_BatchTimer_Timeout"]
 [connection signal="pressed" from="MainCamera/SettingsHUD/ButtonPanel/QuitButton" to="." method="On_QuitButton_Pressed"]
 [connection signal="pressed" from="MainCamera/SettingsHUD/ButtonPanel/StartButton" to="." method="On_StartButton_Pressed"]
+[connection signal="pressed" from="MainCamera/GameHUD/PrintIOButton" to="." method="On_PrintIO_Button_Pressed"]
