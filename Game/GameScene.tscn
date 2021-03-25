@@ -53,6 +53,8 @@ texture = ExtResource( 4 )
 
 [node name="RunnerDetector" type="Area2D" parent="PlayArea"]
 position = Vector2( 1920, 0 )
+monitorable = false
+collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayArea/RunnerDetector"]
 position = Vector2( 0, 540 )

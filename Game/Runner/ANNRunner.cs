@@ -12,11 +12,12 @@ namespace A_NEAT_arena.Game
 {
     public class ANNRunner : BaseRunner
     {
-        public static int InputCount { get; } = 18;
+        public static int InputCount { get; } = 24;
         public static int OutputCount { get; } = 2;
 
-        private delegate void TriggerRaycastUpdate();
-        private event TriggerRaycastUpdate RaycastUpdate;
+        private delegate void VoidFunctionDelegate();
+        private event VoidFunctionDelegate RaycastPhysicsUpdate;
+        private event VoidFunctionDelegate RaycastTransformUpdate;
 
         private delegate void AddRayCastException(RID rid);
         private event AddRayCastException AddException;
@@ -50,8 +51,7 @@ namespace A_NEAT_arena.Game
         {
             Rays = new List<RayCast2D>();
             idleTimeout = 2f;
-            Score = -1000f;
-
+            Score = 0f;
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -62,8 +62,9 @@ namespace A_NEAT_arena.Game
             foreach (RayCast2D c in Eye.GetChildren())
             {
                 Rays.Add(c);
-                RaycastUpdate += c.ForceRaycastUpdate;
-                RaycastUpdate += c.ForceUpdateTransform;
+                c.AddExceptionRid(GetRid());
+                RaycastPhysicsUpdate += c.ForceRaycastUpdate;
+                RaycastTransformUpdate += c.ForceUpdateTransform;
                 AddException += c.AddExceptionRid;
             }
 
@@ -98,23 +99,12 @@ namespace A_NEAT_arena.Game
 
         private void RotateEye()
         {
-            if (State == RunnerState.OnLeftWall)
-            {
-                Eye.Rotation = 0f;
-                return;
-            }
-            else if (State == RunnerState.OnRightWall)
-            {
-                Eye.Rotation = Mathf.Pi;
-                return;
-            }
-            else if (Velocity == new Vector2())
-            {
-                Eye.Rotation = -Mathf.Pi / 2;
-                return;
-            }
+            if (State == RunnerState.OnRightWall) Eye.Rotation = Mathf.Pi;
+            else if (State == RunnerState.OnLeftWall) Eye.Rotation = 0f;
             else Eye.Rotation = Velocity.Angle();
-            RaycastUpdate?.Invoke();
+
+            RaycastTransformUpdate?.Invoke();
+            RaycastPhysicsUpdate?.Invoke();
         }
 
         protected void PollPosition(float delta)
@@ -136,64 +126,28 @@ namespace A_NEAT_arena.Game
         #region inherited overridable functions
         protected override void HandleInput()
         {
-
             RotateEye();
-
             int c = 0;
 
-            // Inputs 1 - 14: ray distances and collider types
+            // Inputs 1 - 20: ray distances and collider types
             foreach (var r in Rays)
             {
                 // get distance to colliding object
-                _brain.InputSignalArray[c] = r.GetCollisionPoint().DistanceTo(r.GlobalPosition);
-                c++;
-
-                #region get type of colliding object
-                var coll = (Node)r.GetCollider();
-                if (coll == null)
+                if (r.IsColliding())
                 {
-                    _brain.InputSignalArray[c] = 0f;
-                    c++;
-                    continue;
+                    _brain.InputSignalArray[c] = r.GetCollisionPoint().DistanceTo(GlobalPosition);
                 }
-
-                var groups = coll.GetGroups();
-                if (groups.Count > 0)
-                {
-                    switch (groups[0])
-                    {
-                        case "Environment":
-                            _brain.InputSignalArray[c] = 0.2f;
-                            break;
-                        case "Coins":
-                            _brain.InputSignalArray[c] = 0.3f;
-                            break;
-                        case "Flags":
-                            _brain.InputSignalArray[c] = 0.4f;
-                            break;
-                        case "Danger":
-                            _brain.InputSignalArray[c] = 0.5f;
-                            break;
-                        case "Laser":
-                            _brain.InputSignalArray[c] = 0.6f;
-                            break;
-                        default:
-                            _brain.InputSignalArray[c] = 0f;
-                            break;
-                    }
-                }
-                else _brain.InputSignalArray[c] = 0f;
-                #endregion
+                else _brain.InputSignalArray[c] = -1f;
                 c++;
             }
 
-            _brain.InputSignalArray[c] = Velocity.x; // Input 15: horizontal velocity
+            _brain.InputSignalArray[c] = Velocity.Length(); // Input 21: Velocity
             c++;
-            _brain.InputSignalArray[c] = Velocity.y; // Input 16: vertical velocity
+            _brain.InputSignalArray[c] = _brain.InputSignalArray[c - 1] > 0 ? Velocity.Angle() : 0f; // Input 22: Angle
             c++;
-            _brain.InputSignalArray[c] = GlobalPosition.x - PlayArea.LaserPosition; // Input 17: distance to laser
+            _brain.InputSignalArray[c] = GlobalPosition.x - PlayArea.LaserPosition; // Input 23: distance to laser
             c++;
-            _brain.InputSignalArray[c] = (int)State; // Input 18: runner state
+            _brain.InputSignalArray[c] = (int)State; // Input 24: runner state
 
             // ANN activation
             _brain.Activate();
@@ -209,25 +163,25 @@ namespace A_NEAT_arena.Game
             State = RunnerState.Dead;
             //Task.Run(() =>
             //{
-                switch (cause)
-                {
-                    case CauseOfDeath.Saw:
-                        Score += 50;
-                        break;
-                    case CauseOfDeath.Laser:
-                        Score += 100f;
-                        break;
-                    case CauseOfDeath.Idling:
-                        Score += 10;
-                        break;
-                    case CauseOfDeath.Void:
-                        Score -= 0f;
-                        break;
-                }
+            switch (cause)
+            {
+                case CauseOfDeath.Saw:
+                    Score += 50;
+                    break;
+                case CauseOfDeath.Laser:
+                    Score += 100f;
+                    break;
+                case CauseOfDeath.Idling:
+                    Score += 10;
+                    break;
+                case CauseOfDeath.Void:
+                    Score -= 0f;
+                    break;
+            }
 
-                PollPosition(2f);
-                _genome.EvaluationInfo.SetFitness(Score);
-                base.Die(cause);
+            PollPosition(2f);
+            _genome.EvaluationInfo.SetFitness(Score);
+            base.Die(cause);
             //});
         }
 

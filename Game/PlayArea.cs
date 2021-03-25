@@ -32,6 +32,7 @@ namespace A_NEAT_arena.Game
         private CourseGenerationStatus GenStatus;
 
         private SemaphoreSlim RunnerDeletionManager;
+        private SemaphoreSlim CourseGeneratorManager;
 
         private Area2D RunnerDetector;
         private Node2D DeathLaser;
@@ -46,6 +47,7 @@ namespace A_NEAT_arena.Game
             IsReset = false;
             GenStatus = CourseGenerationStatus.Free;
             RunnerDeletionManager = new SemaphoreSlim(1, 1);
+            CourseGeneratorManager = new SemaphoreSlim(1, 1);
         }
 
         // Called when the node enters the scene tree for the first time.
@@ -84,7 +86,8 @@ namespace A_NEAT_arena.Game
 
             BatchTimer.Start();
 
-            var pos = Course[0].Flag.Position + new Vector2(30, 30);
+            //var pos = Course[0].Flag.Position + new Vector2(30, 30);
+            var pos = new Vector2(1920f / 2f, 1080f / 2f);
             int spawnedcnt = 0;
             foreach (var runner in Runners)
             {
@@ -104,7 +107,8 @@ namespace A_NEAT_arena.Game
         /// </summary>
         /// <param name="rep">Amount of course segments to generate</param>
         /// <exception cref="System.Exception">Thrown when <c>CourseSegments</c> is empty.</exception>
-        private void GenerateCourse(int rep = 1)
+
+        public void GenerateCourse(int rep = 1)
         {
             //if (GenStatus == CourseGenerationStatus.Busy) return;
             if (CourseSegments.Count == 0) throw new Exception("No course segments given.");
@@ -115,7 +119,7 @@ namespace A_NEAT_arena.Game
                 uint genidx = Gen.Randi() % (uint)CourseSegments.Count;
 
                 var seg = CourseSegments[(int)genidx].Instance() as Segment;
-
+                //GD.Print(genidx);
                 var last = Course[Course.Count - 1];
                 var pos = new Vector2(last.Position.x + last.UsedRect.End.x * 60, 0);
 
@@ -179,17 +183,24 @@ namespace A_NEAT_arena.Game
         /// <param name="body">Trigger node</param>
         public void OnRunnerDetectorBodyEntered(Node body)
         {
-            if (body.GetType().IsSubclassOf(typeof(BaseRunner)))
-            {
-                if (GenStatus != CourseGenerationStatus.Free) return;
+            Task.Run(() => {
+                CourseGeneratorManager.Wait();
+                if (GenStatus != CourseGenerationStatus.Free)
+                {
+                    CourseGeneratorManager.Release();
+                    return;
+                }
                 GenStatus = CourseGenerationStatus.Busy;
+                CourseGeneratorManager.Release();
 
-                GenerateCourse();
+                CallDeferred(nameof(GenerateCourse), 1);
+                //GenerateCourse();
                 var pos = Course[Course.Count - 2].Position;
                 RunnerDetector.Position = pos;
+                System.Threading.Thread.Sleep(1000);
 
                 GenStatus = CourseGenerationStatus.Free;
-            }
+            });
         }
 
         private void On_Beam_BodyEntered(Node body)

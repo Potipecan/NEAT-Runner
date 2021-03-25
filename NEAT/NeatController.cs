@@ -111,7 +111,7 @@ namespace A_NEAT_arena.NEAT
                 $"Course seed: {_listEvaluator.Seed}");
 
             // TODO: set game pausing and stat log when generation ends
-            AddResultSet(network.Statistics);
+            if(network.Statistics._generation > 0)AddResultSet(network.Statistics);
 
             testEnv.EvolutionInfoPanel.UpdateStats(
                 (float)network.Statistics._maxFitness,

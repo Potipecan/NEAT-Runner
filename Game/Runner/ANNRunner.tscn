@@ -13,43 +13,121 @@ scale = Vector2( 2, 2 )
 texture = ExtResource( 3 )
 offset = Vector2( 4, 0 )
 
-[node name="Ray1" type="RayCast2D" parent="Eye" index="0"]
+[node name="EnvRay1" type="RayCast2D" parent="Eye" index="0"]
+visible = false
 cast_to = Vector2( 1920, 0 )
-collision_mask = 30
-collide_with_areas = true
+collision_mask = 2
 
-[node name="Ray2" type="RayCast2D" parent="Eye" index="1"]
+[node name="EnvRay2" type="RayCast2D" parent="Eye" index="1"]
+visible = false
 rotation = 1.5708
 cast_to = Vector2( 1920, 0 )
-collision_mask = 30
-collide_with_areas = true
+collision_mask = 2
 
-[node name="Ray3" type="RayCast2D" parent="Eye" index="2"]
+[node name="EnvRay3" type="RayCast2D" parent="Eye" index="2"]
+visible = false
 rotation = -1.5708
 cast_to = Vector2( 1920, 0 )
-collision_mask = 30
-collide_with_areas = true
+collision_mask = 2
 
-[node name="Ray4" type="RayCast2D" parent="Eye" index="3"]
+[node name="EnvRay4" type="RayCast2D" parent="Eye" index="3"]
+visible = false
 rotation = -0.523599
 cast_to = Vector2( 1920, 0 )
-collision_mask = 30
-collide_with_areas = true
+collision_mask = 2
 
-[node name="Ray5" type="RayCast2D" parent="Eye" index="4"]
+[node name="EnvRay5" type="RayCast2D" parent="Eye" index="4"]
+visible = false
 rotation = -1.0472
 cast_to = Vector2( 1920, 0 )
-collision_mask = 30
-collide_with_areas = true
+collision_mask = 2
 
-[node name="Ray6" type="RayCast2D" parent="Eye" index="5"]
+[node name="EnvRay6" type="RayCast2D" parent="Eye" index="5"]
+visible = false
 rotation = 0.523599
 cast_to = Vector2( 1920, 0 )
-collision_mask = 30
-collide_with_areas = true
+collision_mask = 2
 
-[node name="Ray7" type="RayCast2D" parent="Eye" index="6"]
+[node name="EnvRay7" type="RayCast2D" parent="Eye" index="6"]
+visible = false
 rotation = 1.0472
 cast_to = Vector2( 1920, 0 )
-collision_mask = 30
+collision_mask = 2
+
+[node name="DangerRay1" type="RayCast2D" parent="Eye" index="7"]
+cast_to = Vector2( 1920, 0 )
+collision_mask = 2147483664
+
+[node name="DangerRay2" type="RayCast2D" parent="Eye" index="8"]
+visible = false
+rotation = 1.5708
+cast_to = Vector2( 1920, 0 )
+collision_mask = 16
+
+[node name="DangerRay3" type="RayCast2D" parent="Eye" index="9"]
+visible = false
+rotation = -1.5708
+cast_to = Vector2( 1920, 0 )
+collision_mask = 16
+
+[node name="DangerRay4" type="RayCast2D" parent="Eye" index="10"]
+rotation = -0.523599
+cast_to = Vector2( 1920, 0 )
+collision_mask = 16
+
+[node name="DangerRay5" type="RayCast2D" parent="Eye" index="11"]
+visible = false
+rotation = -1.0472
+cast_to = Vector2( 1920, 0 )
+collision_mask = 16
+
+[node name="DangerRay6" type="RayCast2D" parent="Eye" index="12"]
+rotation = 0.523599
+cast_to = Vector2( 1920, 0 )
+collision_mask = 16
+
+[node name="DangerRay7" type="RayCast2D" parent="Eye" index="13"]
+visible = false
+rotation = 1.0472
+cast_to = Vector2( 1920, 0 )
+collision_mask = 16
+
+[node name="CoinsRay1" type="RayCast2D" parent="Eye" index="14"]
+cast_to = Vector2( 1920, 0 )
+collision_mask = 4
 collide_with_areas = true
+collide_with_bodies = false
+
+[node name="CoinsRay2" type="RayCast2D" parent="Eye" index="15"]
+rotation = -0.523599
+cast_to = Vector2( 1920, 0 )
+collision_mask = 4
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="CoinsRay3" type="RayCast2D" parent="Eye" index="16"]
+rotation = 0.523599
+cast_to = Vector2( 1920, 0 )
+collision_mask = 4
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="FlagsRay1" type="RayCast2D" parent="Eye" index="17"]
+cast_to = Vector2( 1920, 0 )
+collision_mask = 8
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="FlagsRay2" type="RayCast2D" parent="Eye" index="18"]
+rotation = -0.523599
+cast_to = Vector2( 1920, 0 )
+collision_mask = 8
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="FlagsRay3" type="RayCast2D" parent="Eye" index="19"]
+rotation = 0.523599
+cast_to = Vector2( 1920, 0 )
+collision_mask = 8
+collide_with_areas = true
+collide_with_bodies = false
